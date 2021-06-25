@@ -30,11 +30,14 @@ export interface IStats {
   AllAdvertisingAccepted: boolean;
   AllExpensesAccepted: boolean;
   AllWithoutPaymentAccepted: boolean;
-};
-
-
-export interface IStructures {
-  UIDStructure: string
-  Name: string
+  PenaltiesAmount: number;
+  PenaltiesSum: number;
+  PitStopsAmount: number;
+  PrizesAmount: number;
+  PrizesSum: number;
 }
 
+export interface IStructures {
+  UIDStructure: string;
+  Name: string;
+}

@@ -19,7 +19,7 @@ import {RootState} from './src/redux/slices';
 import {setUser} from './src/redux/slices/user-slice';
 import Advances from './src/screens/Advances';
 import AdvanceTypes from './src/screens/AdvanceTypes';
-import CashCollection from './src/screens/CashCollections';
+import CollectionAndPrize from './src/screens/CollectionAndPrize';
 import Deliveries from './src/screens/Deliveries';
 import Expense from './src/screens/Expense';
 import Eighth1 from './src/screens/InnerTables/Eighth1';
@@ -106,8 +106,8 @@ const App: React.FC = () => {
                 <Stack.Screen name="Expense" component={Expense} />
                 <Stack.Screen name="Without" component={Without} />
                 <Stack.Screen
-                  name="CashCollection"
-                  component={CashCollection}
+                  name="CollectionAndPrize"
+                  component={CollectionAndPrize}
                 />
                 <Stack.Screen name="Payments" component={Payments} />
                 <Stack.Screen name="Orders" component={Orders} />

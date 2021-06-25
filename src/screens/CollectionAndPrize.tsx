@@ -16,21 +16,23 @@ import {addSpace, handleError, wait} from '../utils';
 import {formatDate} from '../utils/date';
 
 type listType = {
-  cashier: string;
-  name: string;
+  cashier?: string;
+  name?: string;
   date: string;
   sum: number;
   comment: string;
+  number?: string;
+  employee?: string;
 };
 
-export default function CashCollection({route, navigation}: any) {
+export default function CollectionAndPrize({route, navigation}: any) {
   const {selectedDate, prevDate} = useSelector(
     (state: RootState) => state.dateState,
   );
+  const {structure, type} = route.params;
+
   const [list, setList] = useState<listType[]>([]);
   const [fetching, setFetching] = useState(true);
-  const {structure} = route.params;
-
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
@@ -40,17 +42,39 @@ export default function CashCollection({route, navigation}: any) {
   }, []);
 
   function refresh() {
-    makeGetRequest(
-      `collectionstructure/${structure}/${formatDate(prevDate)}/${formatDate(
-        selectedDate,
-      )}`,
-    )
+    let params: string;
+
+    switch (type) {
+      case 'Инкасация':
+        params = `collectionstructure/${structure}/${formatDate(
+          prevDate,
+        )}/${formatDate(selectedDate)}`;
+        break;
+      case 'Доп. Работа':
+        params = `prizes/${formatDate(prevDate)}/${formatDate(
+          selectedDate,
+        )}?UIDStructure=${structure}`;
+        break;
+      case 'Питстопы':
+        params = `pitstops/${formatDate(prevDate)}/${formatDate(
+          selectedDate,
+        )}?UIDStructure=${structure}`;
+        break;
+      default:
+        params = `penalties/${formatDate(prevDate)}/${formatDate(
+          selectedDate,
+        )}?UIDStructure=${structure}`;
+        break;
+    }
+
+    makeGetRequest(params)
       .then((res) => setList(res))
       .catch(handleError)
       .finally(() => setFetching(false));
   }
 
   useEffect(refresh, [structure, prevDate, selectedDate]);
+
   return (
     <ScrollView
       refreshControl={
@@ -73,8 +97,8 @@ export default function CashCollection({route, navigation}: any) {
           size={30}
           color="#fff"
         />
-        <Text style={{color: '#fff', fontSize: 20}}>Инкасации</Text>
-        <View></View>
+        <Text style={{color: '#fff', fontSize: 20}}>{type}</Text>
+        <View />
       </LinearGradient>
 
       {!fetching ? (
@@ -88,23 +112,30 @@ export default function CashCollection({route, navigation}: any) {
                   borderBottomWidth: 1,
                   padding: 10,
                 }}>
-                <Text style={{width: '10%'}}>{el.name}</Text>
                 <View style={{flex: 1}}>
+                  <Text style={{textAlign: 'center', fontWeight: 'bold'}}>
+                    {el.name || el.number}
+                  </Text>
                   <View style={styles.textRow}>
-                    <Text>Кассир</Text>
-                    <Text>{el.cashier}</Text>
+                    <Text>Сотрудник</Text>
+                    <Text>{el.cashier || el.employee}</Text>
                   </View>
                   <View style={styles.textRow}>
                     <Text>Дата</Text>
                     <Text>{el.date}</Text>
                   </View>
+
+                  {type !== 'Питстопы' && (
+                    <View style={styles.textRow}>
+                      <Text>Сумма</Text>
+                      <Text>{addSpace(el.sum)}</Text>
+                    </View>
+                  )}
                   <View style={styles.textRow}>
                     <Text>Коментарий</Text>
-                    <Text>{el.comment || 'не указана'}</Text>
-                  </View>
-                  <View style={styles.textRow}>
-                    <Text>Сумма</Text>
-                    <Text>{addSpace(el.sum)}</Text>
+                    <Text style={{width: '50%', textAlign: 'right'}}>
+                      {el.comment || 'не указана'}
+                    </Text>
                   </View>
                 </View>
               </View>

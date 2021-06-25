@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
-  Switch,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {makeGetRequest, sendData} from '../dataManegment';
@@ -173,14 +172,22 @@ export default function Orders({route, navigation}: any) {
                 }}>
                 <Text>{el.Number}</Text>
 
-                {el.accepted !== undefined && (
-                  <Switch
-                    trackColor={{false: '#767577', true: '#81b0ff'}}
-                    thumbColor={el.accepted ? '#f5dd4b' : '#f4f3f4'}
-                    onValueChange={() => accept(el.UIDOrder, !el.accepted)}
-                    value={el.accepted}
-                  />
-                )}
+                {el.accepted !== undefined &&
+                  (el.accepted ? (
+                    <Icon
+                      onPress={() => accept(el.UIDOrder, !el.accepted)}
+                      name="checkbox-marked"
+                      size={25}
+                      color="#00B686"
+                    />
+                  ) : (
+                    <Icon
+                      onPress={() => accept(el.UIDOrder, !el.accepted)}
+                      name="checkbox-blank-outline"
+                      size={25}
+                      color="#00B686"
+                    />
+                  ))}
               </View>
               <View style={{flex: 1}}>
                 <View style={styles.textRow}>

@@ -7,10 +7,9 @@ export async function makeGetRequest(reqName: string) {
     const store = await getUser();
     const user = store ? JSON.parse(store) : {};
 
-
     const response = await fetch(`${host}${reqName}`, {
       headers: {
-        Authorization: 'Basic ' + user.token
+        Authorization: 'Basic ' + user.token,
       },
     });
     if (!response.ok) {
@@ -19,7 +18,7 @@ export async function makeGetRequest(reqName: string) {
         throw Error('при подключении к ' + response.url + ' ' + text);
       }
       throw Error(
-        'при подключении к ' + response.url + ', получено ' + response.status
+        'при подключении к ' + response.url + ', получено ' + response.status,
       );
     }
 

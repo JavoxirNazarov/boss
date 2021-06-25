@@ -56,7 +56,7 @@ export default function DeliveryBlock({
   TerminalAmount,
   Cash,
   CashAmount,
-}: IStats) {
+}: Partial<IStats>) {
   const navigation = useNavigation();
   const {isManager} = useRole();
   const {user} = useSelector((state: RootState) => state.userState);

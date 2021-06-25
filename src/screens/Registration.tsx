@@ -31,16 +31,16 @@ export default function Registration() {
         },
       });
       setLoading(false);
-      if (response.status == 403) {
+      if (response.status === 403) {
         throw Error('У вас не подходящая роль для входа');
       }
-      if (response.status == 401) {
+      if (response.status === 401) {
         throw Error('Введены не правильные данные');
       }
       if (!response.ok) {
         throw Error(response.status.toString() + ' ' + response.url);
       }
-      if (response.status == 200) {
+      if (response.status === 200) {
         const obj = await response.json();
         console.log(obj);
 

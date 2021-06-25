@@ -8,7 +8,7 @@ import {IStats} from '../types/fetch';
 import {addSpace} from '../utils';
 import useRole from '../utils/useRole';
 
-export default function Amount({
+export default function Amounts({
   Summa,
   Amount,
   Percent1,
@@ -29,7 +29,12 @@ export default function Amount({
   AllAdvertisingAccepted,
   AllExpensesAccepted,
   AllWithoutPaymentAccepted,
-}: IStats) {
+  PenaltiesAmount,
+  PenaltiesSum,
+  PrizesAmount,
+  PrizesSum,
+  PitStopsAmount,
+}: Partial<IStats>) {
   const navigation = useNavigation();
   const {isManager} = useRole();
   const {user} = useSelector((state: RootState) => state.userState);
@@ -143,7 +148,10 @@ export default function Amount({
       <TouchableOpacity
         onPress={() => {
           if (isManager) {
-            navigation.navigate('CashCollection', {structure: user?.structure});
+            navigation.navigate('CollectionAndPrize', {
+              structure: user?.structure,
+              type: 'Инкасация',
+            });
             return;
           }
           navigation.navigate('TypeSales', {type: 'Инкасация'});
@@ -181,6 +189,68 @@ export default function Amount({
         </View>
         <View style={styles.block_circle}>
           <Text style={styles.block_circle_num}>{AdvertisingAmount || 0}</Text>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => {
+          if (isManager) {
+            navigation.navigate('CollectionAndPrize', {
+              structure: user?.structure,
+              type: 'Доп. Работа',
+            });
+            return;
+          }
+          navigation.navigate('TypeSales', {type: 'Доп. Работа'});
+        }}
+        style={styles.block}>
+        <View style={{justifyContent: 'space-evenly', height: '100%'}}>
+          <Text style={styles.block_title}>Доп. Работа</Text>
+          <Text style={styles.block_sum}>{addSpace(PrizesSum)} сум</Text>
+        </View>
+        <View style={styles.block_circle}>
+          <Text style={styles.block_circle_num}>{PrizesAmount || 0}</Text>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => {
+          if (isManager) {
+            navigation.navigate('CollectionAndPrize', {
+              structure: user?.structure,
+              type: 'Штрафы',
+            });
+            return;
+          }
+          navigation.navigate('TypeSales', {type: 'Штрафы'});
+        }}
+        style={styles.block}>
+        <View style={{justifyContent: 'space-evenly', height: '100%'}}>
+          <Text style={styles.block_title}>Штрафы</Text>
+          <Text style={styles.block_sum}>{addSpace(PenaltiesSum)} сум</Text>
+        </View>
+        <View style={styles.block_circle}>
+          <Text style={styles.block_circle_num}>{PenaltiesAmount || 0}</Text>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => {
+          if (isManager) {
+            navigation.navigate('CollectionAndPrize', {
+              structure: user?.structure,
+              type: 'Питстопы',
+            });
+            return;
+          }
+          navigation.navigate('TypeSales', {type: 'Питстопы'});
+        }}
+        style={styles.block}>
+        <View style={{justifyContent: 'space-evenly', height: '100%'}}>
+          <Text style={styles.block_title}>Питстопы</Text>
+        </View>
+        <View style={styles.block_circle}>
+          <Text style={styles.block_circle_num}>{PitStopsAmount || 0}</Text>
         </View>
       </TouchableOpacity>
 

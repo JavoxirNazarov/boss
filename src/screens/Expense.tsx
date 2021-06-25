@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Switch,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -94,7 +93,7 @@ export default function Orders({route, navigation}: any) {
           color="#fff"
         />
         <Text style={{color: '#fff', fontSize: 20}}>Все Расходы</Text>
-        <View></View>
+        <View />
       </LinearGradient>
 
       {!fetching ? (
@@ -143,14 +142,24 @@ export default function Orders({route, navigation}: any) {
                     {el.comment || 'не указана'}
                   </Text>
                 </View>
-                {el.accepted !== undefined && (
-                  <Switch
-                    trackColor={{false: '#767577', true: '#81b0ff'}}
-                    thumbColor={el.accepted ? '#f5dd4b' : '#f4f3f4'}
-                    onValueChange={() => accept(el.UIDExpense, !el.accepted)}
-                    value={el.accepted}
-                  />
-                )}
+                <View style={{alignItems: 'flex-end'}}>
+                  {el.accepted !== undefined &&
+                    (el.accepted ? (
+                      <Icon
+                        onPress={() => accept(el.UIDExpense, !el.accepted)}
+                        name="checkbox-marked"
+                        size={25}
+                        color="#00B686"
+                      />
+                    ) : (
+                      <Icon
+                        onPress={() => accept(el.UIDExpense, !el.accepted)}
+                        name="checkbox-blank-outline"
+                        size={25}
+                        color="#00B686"
+                      />
+                    ))}
+                </View>
               </View>
             ))
           ) : (

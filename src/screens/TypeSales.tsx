@@ -40,31 +40,41 @@ export default function TypeSales({route, navigation}: any) {
 
   async function refresh() {
     try {
-      if (type == 'Реклама') {
-        const res = await makeGetRequest(
+      let res;
+      if (type === 'Реклама') {
+        res = await makeGetRequest(
           `advertising/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
         );
-        setList(res);
-      } else if (type == 'Сумма без оплат') {
-        const res = await makeGetRequest(
+      } else if (type === 'Сумма без оплат') {
+        res = await makeGetRequest(
           `ordernpstructure/${formatDate(prevDate)}/${formatDate(
             selectedDate,
           )}`,
         );
-        setList(res);
-      } else if (type == 'Инкасация') {
-        const res = await makeGetRequest(
+      } else if (type === 'Инкасация') {
+        res = await makeGetRequest(
           `cashcollection/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
         );
-        setList(res);
+      } else if (type === 'Штрафы') {
+        res = await makeGetRequest(
+          `penalties/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
+        );
+      } else if (type === 'Доп. Работа') {
+        res = await makeGetRequest(
+          `prizes/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
+        );
+      } else if (type === 'Питстопы') {
+        res = await makeGetRequest(
+          `pitstops/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
+        );
       } else {
-        const res = await makeGetRequest(
+        res = await makeGetRequest(
           `expenseadvancestruc/${formatDate(prevDate)}/${formatDate(
             selectedDate,
-          )}/${type == 'Авансы' ? 'advances' : 'expenses'}`,
+          )}/${type === 'Авансы' ? 'advances' : 'expenses'}`,
         );
-        setList(res);
       }
+      setList(res);
     } catch (err) {
       handleError(err);
     }
@@ -75,14 +85,24 @@ export default function TypeSales({route, navigation}: any) {
   }, []);
 
   function routeByType(structure: string) {
-    if (type == 'Сумма без оплат') navigation.navigate('Without', {structure});
-    else if (type == 'Инкасация')
-      navigation.navigate('CashCollection', {structure});
-    else if (type == 'Реклама')
-      navigation.navigate('Orders', {uid: structure, type});
-    else if (type == 'Авансы') navigation.navigate('AdvanceTypes', {structure});
-    else navigation.navigate('Expense', {structure});
+    switch (type) {
+      case 'Сумма без оплат':
+        return navigation.navigate('Without', {structure});
+      case 'Инкасация':
+      case 'Доп. Работа':
+      case 'Штрафы':
+      case 'Питстопы':
+        return navigation.navigate('CollectionAndPrize', {structure, type});
+      case 'Реклама':
+        return navigation.navigate('Orders', {uid: structure, type});
+      case 'Авансы':
+        return navigation.navigate('AdvanceTypes', {structure});
+      default:
+        return navigation.navigate('Expense', {structure});
+    }
   }
+
+  console.log(list);
 
   return (
     <ScrollView
@@ -110,7 +130,9 @@ export default function TypeSales({route, navigation}: any) {
                 }}>
                 <View style={{justifyContent: 'space-evenly', height: '100%'}}>
                   <Text style={styles.block_title}>{type}</Text>
-                  <Text style={styles.block_sum}>{addSpace(el.Sum)} сум</Text>
+                  {type !== 'Питстопы' && (
+                    <Text style={styles.block_sum}>{addSpace(el.Sum)} сум</Text>
+                  )}
                 </View>
                 <View style={styles.block_circle}>
                   <Text style={styles.block_circle_num}>{el.Amount}</Text>

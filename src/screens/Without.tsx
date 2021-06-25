@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
-  Switch,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {makeGetRequest, sendData} from '../dataManegment';
@@ -34,7 +33,6 @@ export default function Orders({route, navigation}: any) {
   const [list, setList] = useState<listType[]>([]);
   const [fetching, setFetching] = useState(true);
   const {structure} = route.params;
-
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
@@ -61,7 +59,7 @@ export default function Orders({route, navigation}: any) {
       UIDOrder: UID,
       Accepted: val,
     })
-      .then((res) => {
+      .then(() => {
         setList((prev) =>
           prev.map((item) => {
             return item.UIDOrder == UID ? {...item, accepted: val} : item;
@@ -93,7 +91,7 @@ export default function Orders({route, navigation}: any) {
           color="#fff"
         />
         <Text style={{color: '#fff', fontSize: 20}}>Без оплат</Text>
-        <View></View>
+        <View />
       </LinearGradient>
 
       {!fetching ? (
@@ -117,14 +115,22 @@ export default function Orders({route, navigation}: any) {
                 }}>
                 <Text>{el.OrderNumber}</Text>
 
-                {el.accepted !== undefined && (
-                  <Switch
-                    trackColor={{false: '#767577', true: '#81b0ff'}}
-                    thumbColor={el.accepted ? '#f5dd4b' : '#f4f3f4'}
-                    onValueChange={() => accept(el.UIDOrder, !el.accepted)}
-                    value={el.accepted}
-                  />
-                )}
+                {el.accepted !== undefined &&
+                  (el.accepted ? (
+                    <Icon
+                      onPress={() => accept(el.UIDOrder, !el.accepted)}
+                      name="checkbox-marked"
+                      size={25}
+                      color="#00B686"
+                    />
+                  ) : (
+                    <Icon
+                      onPress={() => accept(el.UIDOrder, !el.accepted)}
+                      name="checkbox-blank-outline"
+                      size={25}
+                      color="#00B686"
+                    />
+                  ))}
               </View>
               <View style={{flex: 1}}>
                 <View style={styles.textRow}>

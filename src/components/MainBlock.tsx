@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useQuery} from 'react-query';
 import {useSelector} from 'react-redux';
-import {makeGetRequest, queryRequest} from '../dataManegment';
+import {queryRequest} from '../dataManegment';
 import {RootState} from '../redux/slices';
 import {IStats} from '../types/fetch';
 import {formatDate} from '../utils/date';
@@ -41,39 +41,44 @@ export default function MainBlock({scroll}: any) {
     <>
       {isLoading && <Loader />}
       <Amount
-        Summa={stats.Summa}
-        Amount={stats.Amount}
-        Percent1={stats.Percent1}
-        Without={stats.Without}
-        WithoutAmount={stats.WithoutAmount}
-        Advance={stats.Advance}
-        AdvanceAmount={stats.AdvanceAmount}
-        Consumption={stats.Consumption}
-        ConsumptionAmount={stats.ConsumptionAmount}
-        CashCollection={stats.CashCollection}
-        CashCollectionAmount={stats.CashCollectionAmount}
-        PartnersAmountGreen={stats.PartnersAmountGreen}
-        PartnersAmountYellow={stats.PartnersAmountYellow}
-        PartnersSumGreen={stats.PartnersSumGreen}
-        PartnersSumYellow={stats.PartnersSumYellow}
-        AdvertisingAmount={stats.AdvertisingAmount}
-        AdvertisingSum={stats.AdvertisingSum}
-        AllAdvertisingAccepted={stats.AllAdvertisingAccepted}
-        AllExpensesAccepted={stats.AllExpensesAccepted}
-        AllWithoutPaymentAccepted={stats.AllWithoutPaymentAccepted}
+        Summa={stats?.Summa}
+        Amount={stats?.Amount}
+        Percent1={stats?.Percent1}
+        Without={stats?.Without}
+        WithoutAmount={stats?.WithoutAmount}
+        Advance={stats?.Advance}
+        AdvanceAmount={stats?.AdvanceAmount}
+        Consumption={stats?.Consumption}
+        ConsumptionAmount={stats?.ConsumptionAmount}
+        CashCollection={stats?.CashCollection}
+        CashCollectionAmount={stats?.CashCollectionAmount}
+        PartnersAmountGreen={stats?.PartnersAmountGreen}
+        PartnersAmountYellow={stats?.PartnersAmountYellow}
+        PartnersSumGreen={stats?.PartnersSumGreen}
+        PartnersSumYellow={stats?.PartnersSumYellow}
+        AdvertisingAmount={stats?.AdvertisingAmount}
+        AdvertisingSum={stats?.AdvertisingSum}
+        AllAdvertisingAccepted={stats?.AllAdvertisingAccepted}
+        AllExpensesAccepted={stats?.AllExpensesAccepted}
+        AllWithoutPaymentAccepted={stats?.AllWithoutPaymentAccepted}
+        PenaltiesAmount={stats?.PenaltiesAmount}
+        PenaltiesSum={stats?.PenaltiesSum}
+        PrizesAmount={stats?.PrizesAmount}
+        PrizesSum={stats?.PrizesSum}
+        PitStopsAmount={stats?.PitStopsAmount}
       />
       <DeliveryBlock
-        DeliverySum={stats.DeliverySum}
-        DeliveryAmount={stats.DeliveryAmount}
-        Percent2={stats.Percent2}
-        Click={stats.Click}
-        Cash={stats.Cash}
-        CashAmount={stats.CashAmount}
-        ClickAmount={stats.ClickAmount}
-        Payme={stats.Payme}
-        PaymeAmount={stats.PaymeAmount}
-        Terminal={stats.Terminal}
-        TerminalAmount={stats.TerminalAmount}
+        DeliverySum={stats?.DeliverySum}
+        DeliveryAmount={stats?.DeliveryAmount}
+        Percent2={stats?.Percent2}
+        Click={stats?.Click}
+        Cash={stats?.Cash}
+        CashAmount={stats?.CashAmount}
+        ClickAmount={stats?.ClickAmount}
+        Payme={stats?.Payme}
+        PaymeAmount={stats?.PaymeAmount}
+        Terminal={stats?.Terminal}
+        TerminalAmount={stats?.TerminalAmount}
       />
 
       {isBoss && (
