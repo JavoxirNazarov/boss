@@ -23,6 +23,8 @@ type listType = {
   comment: string;
   number?: string;
   employee?: string;
+  dateEnd: string;
+  dateStart: string;
 };
 
 export default function CollectionAndPrize({route, navigation}: any) {
@@ -72,6 +74,7 @@ export default function CollectionAndPrize({route, navigation}: any) {
       .catch(handleError)
       .finally(() => setFetching(false));
   }
+  console.log(list);
 
   useEffect(refresh, [structure, prevDate, selectedDate]);
 
@@ -120,16 +123,29 @@ export default function CollectionAndPrize({route, navigation}: any) {
                     <Text>Сотрудник</Text>
                     <Text>{el.cashier || el.employee}</Text>
                   </View>
-                  <View style={styles.textRow}>
-                    <Text>Дата</Text>
-                    <Text>{el.date}</Text>
-                  </View>
 
-                  {type !== 'Питстопы' && (
-                    <View style={styles.textRow}>
-                      <Text>Сумма</Text>
-                      <Text>{addSpace(el.sum)}</Text>
-                    </View>
+                  {type !== 'Питстопы' ? (
+                    <>
+                      <View style={styles.textRow}>
+                        <Text>Дата</Text>
+                        <Text>{el.date}</Text>
+                      </View>
+                      <View style={styles.textRow}>
+                        <Text>Сумма</Text>
+                        <Text>{addSpace(el.sum)}</Text>
+                      </View>
+                    </>
+                  ) : (
+                    <>
+                      <View style={styles.textRow}>
+                        <Text>Дата начала</Text>
+                        <Text>{el.dateStart}</Text>
+                      </View>
+                      <View style={styles.textRow}>
+                        <Text>Дата конца</Text>
+                        <Text>{el.dateEnd}</Text>
+                      </View>
+                    </>
                   )}
                   <View style={styles.textRow}>
                     <Text>Коментарий</Text>
@@ -157,6 +173,6 @@ const styles = StyleSheet.create({
   textRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 15,
   },
 });

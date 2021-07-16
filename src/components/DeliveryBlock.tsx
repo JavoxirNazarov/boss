@@ -158,7 +158,7 @@ export default function DeliveryBlock({
         </>
       ) : (
         <>
-          <View style={styles.row}></View>
+          <View style={styles.row} />
           <View style={styles.row}>
             <TouchableHighlight
               onPress={() => {

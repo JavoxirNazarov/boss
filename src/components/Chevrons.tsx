@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {Dispatch, SetStateAction} from 'react';
+import React from 'react';
 import {
   Alert,
   PermissionsAndroid,
@@ -77,6 +77,7 @@ const Chevrons: React.FC<chevronProps> = ({
       }
 
       const data = await res.json();
+
       let ws = XLSX.utils.json_to_sheet(data);
 
       let wb = XLSX.utils.book_new();

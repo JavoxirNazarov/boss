@@ -52,6 +52,7 @@ import TypeSales from './src/screens/TypeSales';
 import Without from './src/screens/Without';
 import {getUser} from './src/utils/getUser';
 import Settings from './src/screens/Settings';
+import Act from './src/screens/Act';
 
 const Stack = createStackNavigator();
 
@@ -68,16 +69,12 @@ const App: React.FC = () => {
             if (biometry !== null && biometry !== undefined) {
               FingerprintScanner.authenticate({
                 description:
-                  biometry == 'Face ID'
+                  biometry === 'Face ID'
                     ? 'Scan your Face on the device to continue'
-                    : 'Scan your Fingerprint on the device scanner to continue',
+                    : 'Scan your Fingerprint on the device scanner',
               })
-                .then(() => {
-                  if (res) dispatch(setUser(JSON.parse(res)));
-                })
-                .catch((error) => {
-                  console.log('Authentication error is => ', error);
-                });
+                .then(() => dispatch(setUser(JSON.parse(res))))
+                .catch((err) => console.log('Auth error is: ', err));
             } else {
               console.log('biometric authentication is not available');
             }
@@ -98,6 +95,7 @@ const App: React.FC = () => {
                 <Stack.Screen name="Main" component={Main} />
                 <Stack.Screen name="Settings" component={Settings} />
                 <Stack.Screen name="PartnerList" component={PartnerList} />
+                <Stack.Screen name="Act" component={Act} />
                 <Stack.Screen name="Sales" component={Sales} />
                 <Stack.Screen name="Deliveries" component={Deliveries} />
                 <Stack.Screen name="TypeSales" component={TypeSales} />

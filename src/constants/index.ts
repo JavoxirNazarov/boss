@@ -1,7 +1,7 @@
 import { blockNameTypes } from "./types";
 
 export const host = __DEV__
-  ? 'http://192.168.1.124/apex/hs/boss/'
+  ? 'http://192.168.0.124/apex/hs/boss/'
   : 'https://apex.lavina.uz/apex/hs/boss/';
 
 export const blockNames: { graph: blockNameTypes; show: boolean }[] = [

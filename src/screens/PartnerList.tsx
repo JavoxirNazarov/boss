@@ -1,21 +1,21 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
+import {Option, Select} from 'react-native-chooser';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {useSelector} from 'react-redux';
 import GoBack from '../components/Tables/GoBack';
 import {makeGetRequest} from '../dataManegment';
 import {RootState} from '../redux/slices';
 import {addSpace, handleError, wait} from '../utils';
 import {formatDate} from '../utils/date';
-import {Option, Select} from 'react-native-chooser';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 type partnerType = {
   UIDPartner: string;
@@ -102,16 +102,8 @@ export default function PartnerList({navigation}: any) {
       <GoBack />
 
       <TouchableOpacity
-        style={{
-          width: 150,
-          height: 30,
-          borderRadius: 5,
-          backgroundColor: '#9457EB',
-          alignSelf: 'flex-end',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginVertical: 10,
-        }}>
+        onPress={() => navigation.navigate('Act')}
+        style={styles.downloadBtn}>
         <Text style={{color: '#fff', fontSize: 16}}>Акт сверки</Text>
       </TouchableOpacity>
 
@@ -155,7 +147,9 @@ export default function PartnerList({navigation}: any) {
                     style={{...styles.block_half, backgroundColor: 'green'}}>
                     <>
                       <View style={styles.block_circle}>
-                        <Text style={styles.block_circle_num}>{gr.Amount}</Text>
+                        <Text style={styles.block_circle_num}>
+                          {gr?.Amount}
+                        </Text>
                       </View>
                       <Text style={styles.block_sum}>
                         {addSpace(gr.Sum)} сум
@@ -167,7 +161,9 @@ export default function PartnerList({navigation}: any) {
                     style={{...styles.block_half, backgroundColor: 'yellow'}}>
                     <>
                       <View style={styles.block_circle}>
-                        <Text style={styles.block_circle_num}>{yl.Amount}</Text>
+                        <Text style={styles.block_circle_num}>
+                          {yl?.Amount}
+                        </Text>
                       </View>
                       <Text style={styles.block_sum}>
                         {addSpace(yl.Sum)} сум
@@ -191,7 +187,16 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
-
+  downloadBtn: {
+    width: 150,
+    height: 30,
+    borderRadius: 5,
+    backgroundColor: '#9457EB',
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+  },
   select: {
     marginTop: 10,
     alignSelf: 'center',

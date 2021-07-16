@@ -25,6 +25,8 @@ type ordersType = {
   UIDOrder: string;
   Employee: string;
   accepted?: boolean;
+  Deleted?: boolean;
+  DeletionCause?: string;
 };
 
 export default function Orders({route, navigation}: any) {
@@ -60,7 +62,7 @@ export default function Orders({route, navigation}: any) {
         .then((res) => setOrders(res))
         .catch(handleError)
         .finally(() => setLoading(false));
-    } else if (typeof type == 'string' && type.includes('Партнеры')) {
+    } else if (type?.includes('Партнеры')) {
       makeGetRequest(
         `partners/${formatDate(prevDate)}/${formatDate(
           selectedDate,
@@ -69,7 +71,7 @@ export default function Orders({route, navigation}: any) {
         .then((res) => setOrders(res))
         .catch(handleError)
         .finally(() => setLoading(false));
-    } else if (type == 'доставки') {
+    } else if (type === 'доставки') {
       makeGetRequest(
         `listdorders/${uid}/${formatDate(prevDate)}/${formatDate(
           selectedDate,
@@ -105,7 +107,7 @@ export default function Orders({route, navigation}: any) {
       UIDOrder: UID,
       Accepted: val,
     })
-      .then((res) => {
+      .then(() => {
         setOrders((prev) =>
           prev.map((item) => {
             return item.UIDOrder == UID ? {...item, accepted: val} : item;
@@ -113,6 +115,13 @@ export default function Orders({route, navigation}: any) {
         );
       })
       .catch(handleError);
+  };
+
+  const handleColor = (el: ordersType) => {
+    if (el.Deleted !== undefined && el.Deleted) return '#e31b3d';
+    if (el.accepted !== undefined && !el.accepted) return '#e31b3d';
+    if (!el.DateClose || !el.DateOpen) return '#e31b3d';
+    return '#fff';
   };
 
   return (
@@ -140,7 +149,7 @@ export default function Orders({route, navigation}: any) {
           Все{' '}
           {type ? type : structureName ? 'счета: ' + structureName : 'счета'}
         </Text>
-        <View></View>
+        <View />
       </LinearGradient>
 
       {!loading ? (
@@ -157,39 +166,18 @@ export default function Orders({route, navigation}: any) {
                 flexDirection: 'row',
                 borderBottomWidth: 1,
                 padding: 10,
-                backgroundColor:
-                  el.accepted !== undefined
-                    ? el.accepted
-                      ? '#FFFFFF'
-                      : '#e31b3d'
-                    : '#fff',
+                backgroundColor: handleColor(el),
               }}>
-              <View
-                style={{
-                  width: '15%',
-                  alignItems: 'center',
-                  justifyContent: 'space-around',
-                }}>
-                <Text>{el.Number}</Text>
-
-                {el.accepted !== undefined &&
-                  (el.accepted ? (
-                    <Icon
-                      onPress={() => accept(el.UIDOrder, !el.accepted)}
-                      name="checkbox-marked"
-                      size={25}
-                      color="#00B686"
-                    />
-                  ) : (
-                    <Icon
-                      onPress={() => accept(el.UIDOrder, !el.accepted)}
-                      name="checkbox-blank-outline"
-                      size={25}
-                      color="#00B686"
-                    />
-                  ))}
-              </View>
               <View style={{flex: 1}}>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontWeight: 'bold',
+                    marginVertical: 10,
+                  }}>
+                  Чек: {el.Number}
+                </Text>
+
                 <View style={styles.textRow}>
                   <Text>Тип счёта</Text>
                   <Text>{el.Type}</Text>
@@ -203,12 +191,39 @@ export default function Orders({route, navigation}: any) {
                   <Text>{el.DateClose}</Text>
                 </View>
                 <View style={styles.textRow}>
-                  <Text>Официант</Text>
+                  <Text>Работник</Text>
                   <Text>{el.Employee}</Text>
                 </View>
                 <View style={styles.textRow}>
                   <Text>Сумма</Text>
                   <Text>{addSpace(el.Sum)}</Text>
+                </View>
+                {el.DeletionCause !== undefined && (
+                  <View style={styles.textRow}>
+                    <Text>Причина удаления</Text>
+                    <Text style={{width: '50%', textAlign: 'right'}}>
+                      {el.DeletionCause || 'Причина не указана'}
+                    </Text>
+                  </View>
+                )}
+
+                <View style={{alignItems: 'flex-end'}}>
+                  {el.accepted !== undefined &&
+                    (el?.accepted ? (
+                      <Icon
+                        onPress={() => accept(el.UIDOrder, !el.accepted)}
+                        name="checkbox-marked"
+                        size={25}
+                        color="#00B686"
+                      />
+                    ) : (
+                      <Icon
+                        onPress={() => accept(el.UIDOrder, !el.accepted)}
+                        name="checkbox-blank-outline"
+                        size={25}
+                        color="#00B686"
+                      />
+                    ))}
                 </View>
               </View>
             </TouchableOpacity>
