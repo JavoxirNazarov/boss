@@ -81,9 +81,6 @@ export const queryRequest = (params: string) => {
 };
 
 export const queryPost = (params: string, body: any) => {
-  console.log(params);
-  console.log(body);
-
   return sendData(params, body)
     .then((res) => res)
     .catch((err) => {

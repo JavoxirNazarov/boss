@@ -63,14 +63,12 @@ export default function Act() {
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
       var wb = XLSX.utils.book_new();
-      act.forEach((el, i) => {
+      act.forEach((el) => {
         wb.SheetNames.push(el.Partner);
         var ws = XLSX.utils.json_to_sheet(el.StringArray);
         ws.G2.s = {
-          font: {
-            sz: 24,
-            bold: true,
-            color: {rgb: ws.G2.v > 0 ? 'red' : 'green'},
+          fill: {
+            bgColor: {rgb: ws.G2.v > 0 ? '#16F75A' : '#F71616'}, // Add background color
           },
         };
         wb.Sheets[el.Partner] = ws;
@@ -132,7 +130,7 @@ export default function Act() {
                   <Text
                     style={{
                       ...styles.tableText,
-                      color: table.Разница > 0 ? 'red' : 'green',
+                      color: table.Разница > 0 ? 'green' : 'red',
                     }}>
                     {table.Разница}
                   </Text>

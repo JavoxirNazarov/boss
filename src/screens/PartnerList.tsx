@@ -125,7 +125,7 @@ export default function PartnerList({navigation}: any) {
             style={{paddingVertical: 10, borderBottomWidth: 1}}
             key={i}
             value={el.UIDPartner}>
-            {el.Name}
+            {el?.Name}
           </Option>
         ))}
       </Select>
@@ -139,7 +139,7 @@ export default function PartnerList({navigation}: any) {
               <View key={i} style={{alignItems: 'center', marginVertical: 15}}>
                 <Text
                   style={{marginVertical: 5, fontSize: 19, fontWeight: 'bold'}}>
-                  {gr.Name}: {selected.Name}
+                  {gr?.Name}: {selected?.Name}
                 </Text>
                 <View style={styles.block}>
                   <TouchableOpacity
@@ -152,7 +152,7 @@ export default function PartnerList({navigation}: any) {
                         </Text>
                       </View>
                       <Text style={styles.block_sum}>
-                        {addSpace(gr.Sum)} сум
+                        {addSpace(gr?.Sum)} сум
                       </Text>
                     </>
                   </TouchableOpacity>
@@ -166,7 +166,7 @@ export default function PartnerList({navigation}: any) {
                         </Text>
                       </View>
                       <Text style={styles.block_sum}>
-                        {addSpace(yl.Sum)} сум
+                        {addSpace(yl?.Sum)} сум
                       </Text>
                     </>
                   </TouchableOpacity>

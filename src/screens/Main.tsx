@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Dimensions, RefreshControl, ScrollView} from 'react-native';
-import GestureRecognizer from 'react-native-swipe-gestures';
+import {RefreshControl, ScrollView} from 'react-native';
+// import GestureRecognizer from 'react-native-swipe-gestures';
 import {useQueryClient} from 'react-query';
 import {useDispatch} from 'react-redux';
 import Chevrons from '../components/Chevrons';
@@ -13,7 +13,7 @@ import {makeGetRequest} from '../dataManegment';
 import {setStructuresThunk} from '../redux/thunks/structures-thunk';
 import {handleError, wait} from '../utils';
 import useRole from '../utils/useRole';
-const {width} = Dimensions.get('screen');
+// const {width} = Dimensions.get('screen');
 
 type propType = {
   navigation: any;
@@ -86,16 +86,13 @@ export default function Main({navigation}: propType) {
         navigation={navigation}
       />
 
-      <GestureRecognizer
+      {/* <GestureRecognizer
         style={{width, alignItems: 'center', paddingHorizontal: 20}}
         config={{velocityThreshold: 0.3, directionalOffsetThreshold: 80}}
         onSwipeLeft={goNext}
-        onSwipeRight={goBack}>
-        <Tables
-          stepName={filteredAllowed[step]?.graph}
-          navigation={navigation}
-        />
-      </GestureRecognizer>
+        onSwipeRight={goBack}> */}
+      <Tables stepName={filteredAllowed[step]?.graph} navigation={navigation} />
+      {/* </GestureRecognizer> */}
 
       <MainBlock scroll={scroll} />
     </ScrollView>

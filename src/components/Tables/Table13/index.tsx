@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Option, Select} from 'react-native-chooser';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useQuery} from 'react-query';
@@ -9,8 +9,6 @@ import {
   VictoryBar,
   VictoryChart,
   VictoryLabel,
-  VictoryStack,
-  VictoryTheme,
 } from 'victory-native';
 import {queryRequest} from '../../../dataManegment';
 import {RootState} from '../../../redux/slices';
@@ -18,25 +16,14 @@ import {selectStructure} from '../../../redux/slices/structures-slice';
 import {formatDate} from '../../../utils/date';
 import {ErrorText, Loader} from '../../Feedbacks';
 
-const colors = [
-  '#FFC700',
-  '#6666FF',
-  '#00B686',
-  '#9457EB',
-  '#E80054',
-  '#495057',
-  '#FFC700',
-  '#6666FF',
-  '#00B686',
-];
-
 type statistcsType = {
   allYear: number;
-  sizesArray: number[];
+  sizesArray?: number[];
   monthsArray: {
     date: string;
-    percent: number;
-    amountArray: number[];
+    percent?: number;
+    amountArray?: number[];
+    amountSum: number;
   }[];
 };
 
@@ -62,19 +49,12 @@ export default function T1() {
   }, [selectedStructure, selectedDate, refetch]);
 
   const bars = useMemo(() => {
-    let arr = [];
-
-    if (data?.sizesArray) {
-      for (let i = 0; i < data.sizesArray.length; i++) {
-        const inner = data.monthsArray?.map((el) => ({
-          x: el.date,
-          y: el.amountArray[i],
-          percent: el.percent,
-        }));
-        arr.push(inner);
-      }
-    }
-    return arr;
+    return (
+      data?.monthsArray?.map((el) => ({
+        x: el.date,
+        y: el.amountSum,
+      })) || []
+    );
   }, [data]);
 
   if (isError) return <ErrorText />;
@@ -108,11 +88,10 @@ export default function T1() {
       {isLoading && <Loader />}
 
       {!!bars.length && (
-        <View style={{paddingLeft: 30}}>
-          <VictoryChart height={240} theme={VictoryTheme.material}>
+        <ScrollView horizontal>
+          <VictoryChart height={240} width={600} domainPadding={{x: 10}}>
             <VictoryAxis
               domainPadding={{x: 10}}
-              // tickFormat={(x) => ``}
               dependentAxis={true}
               style={{
                 axis: {stroke: 'transparent'},
@@ -128,75 +107,17 @@ export default function T1() {
               }}
             />
 
-            <VictoryStack colorScale={colors}>
-              {bars?.map((el, i) => (
-                <VictoryBar
-                  labelComponent={
-                    <VictoryLabel
-                      angle={-90}
-                      dx={-16}
-                      dy={5}
-                      textAnchor="middle"
-                    />
-                  }
-                  labels={({datum}) => (datum.y ? datum.y : '')}
-                  events={[
-                    {
-                      target: 'data',
-                      eventHandlers: {
-                        onPressIn: () => {
-                          return [
-                            {
-                              target: 'data',
-                              mutation: (props) => {
-                                console.log(props);
-                              },
-                            },
-                          ];
-                        },
-                      },
-                    },
-                  ]}
-                  key={i}
-                  style={{
-                    labels: {
-                      fill: '#fff',
-                    },
-                  }}
-                  data={el}
-                />
-              ))}
-            </VictoryStack>
-          </VictoryChart>
-        </View>
-      )}
-
-      <View
-        style={{
-          flexDirection: 'row',
-          alignSelf: 'flex-start',
-          marginVertical: 10,
-        }}>
-        {data?.sizesArray?.map((el, i) => (
-          <View
-            key={i}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginRight: 20,
-            }}>
-            <View
+            <VictoryBar
               style={{
-                height: 10,
-                width: 10,
-                borderRadius: 50,
-                backgroundColor: colors[i],
+                data: {fill: '#6666FF'},
               }}
+              labelComponent={<VictoryLabel textAnchor="middle" />}
+              labels={({datum}) => datum.y}
+              data={bars}
             />
-            <Text style={{fontSize: 8}}> - {el}</Text>
-          </View>
-        ))}
-      </View>
+          </VictoryChart>
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -232,7 +153,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.4,
     shadowRadius: 2.22,
-    marginBottom: 12,
     borderWidth: 0,
   },
   title: {
