@@ -1,13 +1,13 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as Progress from 'react-native-progress';
-import {useQuery} from 'react-query';
-import {useSelector} from 'react-redux';
-import {queryRequest} from '../../../dataManegment';
-import {RootState} from '../../../redux/slices';
-import {addSpace} from '../../../utils';
-import {formatDate} from '../../../utils/date';
-import {ErrorText, Loader} from '../../Feedbacks';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
+import { makeGetRequest } from '../../../dataManegment';
+import { RootState } from '../../../redux/slices';
+import { addSpace } from '../../../utils';
+import { formatDate } from '../../../utils/date';
+import { ErrorText, Loader } from '../../Feedbacks';
 
 type summType = {
   Name: string;
@@ -16,22 +16,18 @@ type summType = {
   UIDStructure: string;
 };
 
-export default function Table1({navigation}: any) {
-  const {selectedDate, prevDate} = useSelector(
+export default function Table1({ navigation }: any) {
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
-  const {isLoading, data, refetch, isError} = useQuery<summType[]>(
-    'table-allsum',
+  const { isLoading, data, isError } = useQuery<summType[]>(
+    ['table-allsum', selectedDate, prevDate],
     () =>
-      queryRequest(
+      makeGetRequest(
         `allsum/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
       ),
-    {retry: false},
+    {},
   );
-
-  useEffect(() => {
-    refetch();
-  }, [selectedDate, prevDate, refetch]);
 
   function select(el: summType) {
     navigation.navigate('First', {
@@ -47,12 +43,12 @@ export default function Table1({navigation}: any) {
       <Text style={styles.title}>Сумма продаж</Text>
       {isLoading && <Loader />}
       {data && (
-        <View style={{...styles.row, marginTop: 50}}>
+        <View style={{ ...styles.row, marginTop: 50 }}>
           {data.map((el, i) => (
             <TouchableOpacity
               onPress={() => select(el)}
               key={i}
-              style={{width: 145, marginBottom: 15}}>
+              style={{ width: 145, marginBottom: 15 }}>
               <Text style={styles.placeName}>{el.Name}</Text>
               <View style={styles.row}>
                 <Text style={styles.placeNumbers}>{addSpace(el.Sum)} сум</Text>
@@ -61,7 +57,7 @@ export default function Table1({navigation}: any) {
                 </Text>
               </View>
               <Progress.Bar
-                style={{marginTop: 5}}
+                style={{ marginTop: 5 }}
                 unfilledColor="#D8D8D8"
                 borderColor="transparent"
                 progress={1 + el.Percent}

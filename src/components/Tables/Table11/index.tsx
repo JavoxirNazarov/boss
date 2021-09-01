@@ -1,14 +1,14 @@
-import React, {useEffect, useMemo} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Option, Select} from 'react-native-chooser';
+import React, { useMemo } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { Option, Select } from 'react-native-chooser';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useQuery} from 'react-query';
-import {useDispatch, useSelector} from 'react-redux';
-import {queryRequest} from '../../../dataManegment';
-import {RootState} from '../../../redux/slices';
-import {selectStructure} from '../../../redux/slices/structures-slice';
-import {formatDate} from '../../../utils/date';
-import {ErrorText, Loader} from '../../Feedbacks';
+import { useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
+import { makeGetRequest } from '../../../dataManegment';
+import { RootState } from '../../../redux/slices';
+import { selectStructure } from '../../../redux/slices/structures-slice';
+import { formatDate } from '../../../utils/date';
+import { ErrorText, Loader } from '../../Feedbacks';
 
 const colors = [
   '#FFC700',
@@ -27,32 +27,28 @@ type infoType = {
   sizeArray: number[];
   monthArray: {
     name: string;
-    decadeArray: {allDecade: number; array: number[]; percent: number}[];
+    decadeArray: { allDecade: number; array: number[]; percent: number }[];
     count: number;
   }[];
 };
 
 export default function T1() {
   const dispatch = useDispatch();
-  const {selectedStructure, structures} = useSelector(
+  const { selectedStructure, structures } = useSelector(
     (state: RootState) => state.structuresState,
   );
-  const {selectedDate} = useSelector((state: RootState) => state.dateState);
+  const { selectedDate } = useSelector((state: RootState) => state.dateState);
 
-  const {isLoading, refetch, data, isError} = useQuery<infoType>(
-    'table-pizzamountstructure',
+  const { isLoading, data, isError } = useQuery<infoType>(
+    ['table-pizzamountstructure', selectedDate, selectedStructure],
     () =>
-      queryRequest(
+      makeGetRequest(
         `pizzamountstructure/${selectedStructure?.UIDStructure}/${formatDate(
           selectedDate,
         )}`,
       ),
-    {retry: false},
+    {},
   );
-
-  useEffect(() => {
-    refetch();
-  }, [selectedDate, selectedStructure, refetch]);
 
   const prevMonthCount = useMemo(() => {
     return data?.monthArray?.length ? data?.monthArray[0].count : 0;
@@ -72,7 +68,7 @@ export default function T1() {
         transparent={true}
         indicatorIcon={<Icon name="angle-down" color="blue" size={25} />}
         onSelect={(value: any, label: any) => {
-          dispatch(selectStructure({Name: label, UIDStructure: value}));
+          dispatch(selectStructure({ Name: label, UIDStructure: value }));
         }}
         defaultText={selectedStructure ? selectedStructure.Name : null}
         style={styles.select}
@@ -83,7 +79,7 @@ export default function T1() {
         }}>
         {structures.map((el, i) => (
           <Option
-            style={{paddingVertical: 10, borderBottomWidth: 1}}
+            style={{ paddingVertical: 10, borderBottomWidth: 1 }}
             key={i}
             value={el.UIDStructure}>
             {el.Name}
@@ -97,18 +93,18 @@ export default function T1() {
         <>
           <View style={styles.blocksRow}>
             <View style={styles.numberBlock}>
-              <Text style={{fontSize: 12, color: '#495057'}}>
+              <Text style={{ fontSize: 12, color: '#495057' }}>
                 {currMonthCount}
               </Text>
             </View>
 
             <View style={styles.numberBlock}>
-              <Text style={{fontSize: 18, color: '#00B686'}}>
+              <Text style={{ fontSize: 18, color: '#00B686' }}>
                 {data.percent}%
               </Text>
             </View>
             <View style={styles.numberBlock}>
-              <Text style={{fontSize: 12, color: '#495057'}}>
+              <Text style={{ fontSize: 12, color: '#495057' }}>
                 {prevMonthCount}
               </Text>
             </View>
@@ -121,11 +117,11 @@ export default function T1() {
               width: '100%',
             }}>
             {[...data.monthArray].reverse().map((month, index) => (
-              <View key={index} style={{width: '48%'}}>
+              <View key={index} style={{ width: '48%' }}>
                 {month.decadeArray.map((el, i) => (
-                  <View key={i} style={{width: '100%', marginVertical: 10}}>
+                  <View key={i} style={{ width: '100%', marginVertical: 10 }}>
                     <View style={styles.textRow}>
-                      <Text style={{color: '#506883', fontSize: 9}}>
+                      <Text style={{ color: '#506883', fontSize: 9 }}>
                         {month.name}
                       </Text>
                       <Text
@@ -161,7 +157,7 @@ export default function T1() {
                             ...styles.progress_item,
                             backgroundColor: colors[n],
                           }}>
-                          <Text style={{fontSize: 9, color: '#FFFFFF'}}>
+                          <Text style={{ fontSize: 9, color: '#FFFFFF' }}>
                             {s}
                           </Text>
                         </View>
@@ -197,7 +193,7 @@ export default function T1() {
                 backgroundColor: colors[i],
               }}
             />
-            <Text style={{fontSize: 8}}> - {el}</Text>
+            <Text style={{ fontSize: 8 }}> - {el}</Text>
           </View>
         ))}
       </View>

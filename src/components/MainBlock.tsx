@@ -1,39 +1,36 @@
-import React, {useEffect, useState} from 'react';
-import {useQuery} from 'react-query';
-import {useSelector} from 'react-redux';
-import {queryRequest} from '../dataManegment';
-import {RootState} from '../redux/slices';
-import {IStats} from '../types/fetch';
-import {formatDate} from '../utils/date';
-import useRole from '../utils/useRole';
+import { useNavigation } from '@react-navigation/native';
+import React from 'react';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
+import { makeGetRequest } from '../dataManegment';
+import { RootState } from '../redux/slices';
+import { IStats } from '../types/fetch';
+import { formatDate } from '../utils/date';
+import AmauntBlock from './AmauntBlock';
 import Amount from './Amount';
 import DeliveryBlock from './DeliveryBlock';
-import {ErrorText, Loader} from './Feedbacks';
-import Restaurants from './Restaurants';
+import { ErrorText, Loader } from './Feedbacks';
 
-export default function MainBlock({scroll}: any) {
-  const {isBoss} = useRole();
-  const {selectedDate, prevDate} = useSelector(
+export default function MainBlock() {
+  const navigation = useNavigation();
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
-  const [localStructure, setLoacalStructure] = useState('');
 
-  const {isLoading, data: stats, refetch, isError} = useQuery<Partial<IStats>>(
-    'stats',
+  const {
+    isLoading,
+    data: stats,
+    isError,
+  } = useQuery<Partial<IStats>>(
+    ['stats', selectedDate, prevDate],
     () =>
-      queryRequest(
-        `getstats?${
-          localStructure ? 'UIDStructure=' + localStructure : ''
-        }&DateStart=${formatDate(prevDate)}&DateEnd=${formatDate(
+      makeGetRequest(
+        `getstats?DateStart=${formatDate(prevDate)}&DateEnd=${formatDate(
           selectedDate,
         )}`,
       ),
-    {retry: false, initialData: {}, refetchInterval: 10000},
+    { initialData: {}, refetchInterval: 10000 },
   );
-
-  useEffect(() => {
-    refetch();
-  }, [selectedDate, localStructure, prevDate]);
 
   if (isError) return <ErrorText />;
 
@@ -81,13 +78,19 @@ export default function MainBlock({scroll}: any) {
         TerminalAmount={stats?.TerminalAmount}
       />
 
-      {isBoss && (
-        <Restaurants
-          scroll={scroll}
-          localStructure={localStructure}
-          setLoacalStructure={setLoacalStructure}
-        />
-      )}
+      <AmauntBlock
+        onPress={() => {
+          navigation.navigate('TypeSales', { type: 'Списания' });
+        }}
+        titleText="Списания"
+        amount={stats?.WriteOffAmount}
+        withFlag
+        collorActive={stats?.AllWriteOffsAccepted}
+      />
+      <AmauntBlock
+        onPress={() => navigation.navigate('Balance')}
+        titleText="Остатки"
+      />
     </>
   );
 }

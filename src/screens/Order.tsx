@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View, Dimensions} from 'react-native';
-import {makeGetRequest} from '../dataManegment';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View, Dimensions } from 'react-native';
+import { makeGetRequest } from '../dataManegment';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
-import {handleError} from '../utils';
-const {width} = Dimensions.get('screen');
+import { handleError } from '../utils';
+const { width } = Dimensions.get('screen');
 
 type goodType = {
   strNumber: number;
@@ -40,18 +40,18 @@ type infoType = {
   phone: string;
 };
 
-export default function Order({route, navigation}: any) {
-  const {id} = route.params;
+export default function Order({ route, navigation }: any) {
+  const { id } = route.params;
   const [info, setInfo] = useState<Partial<infoType>>({});
 
   useEffect(() => {
     makeGetRequest('inforder/' + id)
       .then((res) => setInfo(res))
       .catch(handleError);
-  }, []);
+  }, [id]);
 
   return (
-    <ScrollView style={{width: '100%'}}>
+    <ScrollView style={{ width: '100%' }}>
       <LinearGradient colors={['#CD4629', '#FF5733']} style={styles.block}>
         <View style={styles.header}>
           <Icon
@@ -60,7 +60,7 @@ export default function Order({route, navigation}: any) {
             size={30}
             color="#fff"
           />
-          <Text style={{color: '#fff', fontSize: 20}}>Детали счета</Text>
+          <Text style={{ color: '#fff', fontSize: 20 }}>Детали счета</Text>
           <View></View>
         </View>
 
@@ -87,7 +87,7 @@ export default function Order({route, navigation}: any) {
         <View style={styles.textRow}>
           <Text style={styles.block_text}>Адресс</Text>
           <Text
-            style={{...styles.block_text, width: '50%', textAlign: 'right'}}>
+            style={{ ...styles.block_text, width: '50%', textAlign: 'right' }}>
             {info.address || 'Не указан'}
           </Text>
         </View>
@@ -114,7 +114,7 @@ export default function Order({route, navigation}: any) {
         <View style={styles.textRow}>
           <Text style={styles.block_text}>Комментарий</Text>
           <Text
-            style={{...styles.block_text, width: '50%', textAlign: 'right'}}>
+            style={{ ...styles.block_text, width: '50%', textAlign: 'right' }}>
             {info.comment || 'Не указан'}
           </Text>
         </View>
@@ -138,34 +138,32 @@ export default function Order({route, navigation}: any) {
         pagingEnabled={true}
         horizontal
         showsHorizontalScrollIndicator={false}>
-        <View style={{width}}>
-          {info.goods
-            ? info.goods.map((el, i) => (
-                <View
-                  key={i}
-                  style={{
-                    flexDirection: 'row',
-                    borderBottomWidth: 1,
-                    padding: 10,
-                  }}>
-                  <Text style={{width: '10%'}}>{el.strNumber}</Text>
-                  <View style={{flex: 1}}>
-                    <View style={styles.textRow}>
-                      <Text>{el.name}</Text>
-                    </View>
-                    <View style={styles.textRow}>
-                      <Text>Сумма</Text>
-                      <Text>
-                        {el.price} x {el.amount} = {el.sum}
-                      </Text>
-                    </View>
-                  </View>
+        <View style={{ width }}>
+          {info?.goods?.map((el, i) => (
+            <View
+              key={i}
+              style={{
+                flexDirection: 'row',
+                borderBottomWidth: 1,
+                padding: 10,
+              }}>
+              <Text style={{ width: '10%' }}>{el.strNumber}</Text>
+              <View style={{ flex: 1 }}>
+                <View style={styles.textRow}>
+                  <Text>{el.name}</Text>
                 </View>
-              ))
-            : null}
+                <View style={styles.textRow}>
+                  <Text>Сумма</Text>
+                  <Text>
+                    {el.price} x {el.amount} = {el.sum}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          ))}
         </View>
 
-        <View style={{width}}>
+        <View style={{ width }}>
           {info.payments
             ? info.payments.map((el, i) => (
                 <View
@@ -175,8 +173,8 @@ export default function Order({route, navigation}: any) {
                     borderBottomWidth: 1,
                     padding: 10,
                   }}>
-                  <Text style={{width: '10%'}}>{el.strNumber}</Text>
-                  <View style={{flex: 1}}>
+                  <Text style={{ width: '10%' }}>{el.strNumber}</Text>
+                  <View style={{ flex: 1 }}>
                     <View style={styles.textRow}>
                       <Text>{el.type}</Text>
                     </View>

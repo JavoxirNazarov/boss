@@ -1,12 +1,13 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useSelector} from 'react-redux';
-import {RootState} from '../redux/slices';
-import {IStats} from '../types/fetch';
-import {addSpace} from '../utils';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/slices';
+import { IStats } from '../types/fetch';
+import { addSpace } from '../utils';
 import useRole from '../utils/useRole';
+import AmauntBlock from './AmauntBlock';
 
 export default function Amounts({
   Summa,
@@ -36,8 +37,8 @@ export default function Amounts({
   PitStopsAmount,
 }: Partial<IStats>) {
   const navigation = useNavigation();
-  const {isManager} = useRole();
-  const {user} = useSelector((state: RootState) => state.userState);
+  const { isManager } = useRole();
+  const { user } = useSelector((state: RootState) => state.userState);
 
   return (
     <>
@@ -47,11 +48,11 @@ export default function Amounts({
             navigation.navigate(
               'Sections',
               isManager
-                ? {uid: user?.structure, structureName: user?.structureName}
+                ? { uid: user?.structure, structureName: user?.structureName }
                 : {},
             );
           }}
-          style={{...styles.row, backgroundColor: '#ccc'}}>
+          style={{ ...styles.row, backgroundColor: '#ccc' }}>
           <Text style={styles.mainText}>Сумма продаж</Text>
           <Text style={styles.mainText}>{addSpace(Summa)} сум </Text>
         </TouchableOpacity>
@@ -60,15 +61,15 @@ export default function Amounts({
             navigation.navigate(
               'Orders',
               isManager
-                ? {uid: user?.structure, structureName: user?.structureName}
+                ? { uid: user?.structure, structureName: user?.structureName }
                 : {},
             );
           }}
           style={styles.row}>
-          <Text style={{...styles.mainText, textAlign: 'right'}}>
+          <Text style={{ ...styles.mainText, textAlign: 'right' }}>
             {Percent1 || 0}%
           </Text>
-          <Text style={{...styles.mainText, textAlign: 'right'}}>
+          <Text style={{ ...styles.mainText, textAlign: 'right' }}>
             {Amount || 0} шт.
           </Text>
         </TouchableOpacity>
@@ -76,34 +77,28 @@ export default function Amounts({
       {!isManager && (
         <TouchableOpacity
           onPress={() => navigation.navigate('Sales')}
-          style={{...styles.block_circle, marginVertical: 5}}>
+          style={{ ...styles.block_circle, marginVertical: 5 }}>
           <Icon name="arrow-circle-up" size={20} color="#fff" />
         </TouchableOpacity>
       )}
 
       {/* ======== */}
-
-      <TouchableOpacity
+      <AmauntBlock
         onPress={() => {
           if (isManager) {
-            navigation.navigate('Without', {structure: user?.structure});
+            navigation.navigate('Without', { structure: user?.structure });
             return;
           }
-          navigation.navigate('TypeSales', {type: 'Сумма без оплат'});
+          navigation.navigate('TypeSales', { type: 'Сумма без оплат' });
         }}
-        style={{
-          ...styles.block,
-          backgroundColor: AllWithoutPaymentAccepted ? '#20ba27' : '#e31b3d',
-        }}>
-        <View style={{justifyContent: 'space-evenly', height: '100%'}}>
-          <Text style={styles.block_title}>Сумма без оплат</Text>
-          <Text style={styles.block_sum}>{addSpace(Without)} сум</Text>
-        </View>
-        <View style={styles.block_circle}>
-          <Text style={styles.block_circle_num}>{WithoutAmount || 0}</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity
+        titleText="Сумма без оплат"
+        summ={Without}
+        amount={WithoutAmount}
+        withFlag
+        collorActive={AllWithoutPaymentAccepted}
+      />
+
+      <AmauntBlock
         onPress={() => {
           if (isManager) {
             navigation.navigate('Expense', {
@@ -111,21 +106,16 @@ export default function Amounts({
             });
             return;
           }
-          navigation.navigate('TypeSales', {type: 'Расходы'});
+          navigation.navigate('TypeSales', { type: 'Расходы' });
         }}
-        style={{
-          ...styles.block,
-          backgroundColor: AllExpensesAccepted ? '#20ba27' : '#e31b3d',
-        }}>
-        <View style={{justifyContent: 'space-evenly', height: '100%'}}>
-          <Text style={styles.block_title}>Расходы</Text>
-          <Text style={styles.block_sum}>{addSpace(Consumption)} сум</Text>
-        </View>
-        <View style={styles.block_circle}>
-          <Text style={styles.block_circle_num}>{ConsumptionAmount || 0}</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity
+        titleText="Расходы"
+        withFlag
+        collorActive={AllExpensesAccepted}
+        summ={Consumption}
+        amount={ConsumptionAmount}
+      />
+
+      <AmauntBlock
         onPress={() => {
           if (isManager) {
             navigation.navigate('AdvanceTypes', {
@@ -133,19 +123,14 @@ export default function Amounts({
             });
             return;
           }
-          navigation.navigate('TypeSales', {type: 'Авансы'});
+          navigation.navigate('TypeSales', { type: 'Авансы' });
         }}
-        style={styles.block}>
-        <View style={{justifyContent: 'space-evenly', height: '100%'}}>
-          <Text style={styles.block_title}>Авансы</Text>
-          <Text style={styles.block_sum}>{addSpace(Advance)} сум</Text>
-        </View>
-        <View style={styles.block_circle}>
-          <Text style={styles.block_circle_num}>{AdvanceAmount || 0}</Text>
-        </View>
-      </TouchableOpacity>
+        titleText="Авансы"
+        summ={Advance}
+        amount={AdvanceAmount}
+      />
 
-      <TouchableOpacity
+      <AmauntBlock
         onPress={() => {
           if (isManager) {
             navigation.navigate('CollectionAndPrize', {
@@ -154,21 +139,14 @@ export default function Amounts({
             });
             return;
           }
-          navigation.navigate('TypeSales', {type: 'Инкасация'});
+          navigation.navigate('TypeSales', { type: 'Инкасация' });
         }}
-        style={styles.block}>
-        <View style={{justifyContent: 'space-evenly', height: '100%'}}>
-          <Text style={styles.block_title}>Инкасация</Text>
-          <Text style={styles.block_sum}>{addSpace(CashCollection)} сум</Text>
-        </View>
-        <View style={styles.block_circle}>
-          <Text style={styles.block_circle_num}>
-            {CashCollectionAmount || 0}
-          </Text>
-        </View>
-      </TouchableOpacity>
+        titleText="Инкасация"
+        summ={CashCollection}
+        amount={CashCollectionAmount}
+      />
 
-      <TouchableOpacity
+      <AmauntBlock
         onPress={() => {
           if (isManager) {
             navigation.navigate('Orders', {
@@ -177,22 +155,16 @@ export default function Amounts({
             });
             return;
           }
-          navigation.navigate('TypeSales', {type: 'Реклама'});
+          navigation.navigate('TypeSales', { type: 'Реклама' });
         }}
-        style={{
-          ...styles.block,
-          backgroundColor: AllAdvertisingAccepted ? '#20ba27' : '#e31b3d',
-        }}>
-        <View style={{justifyContent: 'space-evenly', height: '100%'}}>
-          <Text style={styles.block_title}>Реклама</Text>
-          <Text style={styles.block_sum}>{addSpace(AdvertisingSum)} сум</Text>
-        </View>
-        <View style={styles.block_circle}>
-          <Text style={styles.block_circle_num}>{AdvertisingAmount || 0}</Text>
-        </View>
-      </TouchableOpacity>
+        titleText="Реклама"
+        summ={AdvertisingSum}
+        amount={AdvertisingAmount}
+        withFlag
+        collorActive={AllAdvertisingAccepted}
+      />
 
-      <TouchableOpacity
+      <AmauntBlock
         onPress={() => {
           if (isManager) {
             navigation.navigate('CollectionAndPrize', {
@@ -201,19 +173,14 @@ export default function Amounts({
             });
             return;
           }
-          navigation.navigate('TypeSales', {type: 'Доп. Работа'});
+          navigation.navigate('TypeSales', { type: 'Доп. Работа' });
         }}
-        style={styles.block}>
-        <View style={{justifyContent: 'space-evenly', height: '100%'}}>
-          <Text style={styles.block_title}>Доп. Работа</Text>
-          <Text style={styles.block_sum}>{addSpace(PrizesSum)} сум</Text>
-        </View>
-        <View style={styles.block_circle}>
-          <Text style={styles.block_circle_num}>{PrizesAmount || 0}</Text>
-        </View>
-      </TouchableOpacity>
+        titleText="Доп. Работа"
+        summ={PrizesSum}
+        amount={PrizesAmount}
+      />
 
-      <TouchableOpacity
+      <AmauntBlock
         onPress={() => {
           if (isManager) {
             navigation.navigate('CollectionAndPrize', {
@@ -222,19 +189,14 @@ export default function Amounts({
             });
             return;
           }
-          navigation.navigate('TypeSales', {type: 'Штрафы'});
+          navigation.navigate('TypeSales', { type: 'Штрафы' });
         }}
-        style={styles.block}>
-        <View style={{justifyContent: 'space-evenly', height: '100%'}}>
-          <Text style={styles.block_title}>Штрафы</Text>
-          <Text style={styles.block_sum}>{addSpace(PenaltiesSum)} сум</Text>
-        </View>
-        <View style={styles.block_circle}>
-          <Text style={styles.block_circle_num}>{PenaltiesAmount || 0}</Text>
-        </View>
-      </TouchableOpacity>
+        titleText="Штрафы"
+        summ={PenaltiesSum}
+        amount={PenaltiesAmount}
+      />
 
-      <TouchableOpacity
+      <AmauntBlock
         onPress={() => {
           if (isManager) {
             navigation.navigate('CollectionAndPrize', {
@@ -243,20 +205,19 @@ export default function Amounts({
             });
             return;
           }
-          navigation.navigate('TypeSales', {type: 'Питстопы'});
+          navigation.navigate('TypeSales', { type: 'Питстопы' });
         }}
-        style={styles.block}>
-        <View style={{justifyContent: 'space-evenly', height: '100%'}}>
-          <Text style={styles.block_title}>Питстопы</Text>
-        </View>
-        <View style={styles.block_circle}>
-          <Text style={styles.block_circle_num}>{PitStopsAmount || 0}</Text>
-        </View>
-      </TouchableOpacity>
+        titleText="Питстопы"
+        amount={PitStopsAmount}
+      />
 
       <TouchableOpacity
         onPress={() => navigation.navigate('PartnerList')}
-        style={{...styles.block, justifyContent: 'space-around', height: 130}}>
+        style={{
+          ...styles.block,
+          justifyContent: 'space-around',
+          height: 130,
+        }}>
         <View
           style={{
             justifyContent: 'space-evenly',

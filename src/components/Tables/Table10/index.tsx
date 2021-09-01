@@ -1,11 +1,11 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {useQuery} from 'react-query';
-import {useSelector} from 'react-redux';
-import {queryRequest} from '../../../dataManegment';
-import {RootState} from '../../../redux/slices';
-import {formatDate} from '../../../utils/date';
-import {ErrorText, Loader} from '../../Feedbacks';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
+import { makeGetRequest } from '../../../dataManegment';
+import { RootState } from '../../../redux/slices';
+import { formatDate } from '../../../utils/date';
+import { ErrorText, Loader } from '../../Feedbacks';
 
 const colors = [
   '#FFC700',
@@ -27,18 +27,16 @@ type infoType = {
 };
 
 export default function T1() {
-  const {selectedDate} = useSelector((state: RootState) => state.dateState);
-  const {structures} = useSelector((state: RootState) => state.structuresState);
-
-  const {isLoading, data, isError, refetch} = useQuery<infoType>(
-    'table-pizzamount',
-    () => queryRequest('pizzamount/' + formatDate(selectedDate)),
-    {retry: false},
+  const { selectedDate } = useSelector((state: RootState) => state.dateState);
+  const { structures } = useSelector(
+    (state: RootState) => state.structuresState,
   );
 
-  useEffect(() => {
-    refetch();
-  }, [selectedDate, structures, refetch]);
+  const { isLoading, data, isError } = useQuery<infoType>(
+    ['table-pizzamount', selectedDate, structures],
+    () => makeGetRequest('pizzamount/' + formatDate(selectedDate)),
+    {},
+  );
 
   if (isError) return <ErrorText />;
 
@@ -51,18 +49,18 @@ export default function T1() {
         <>
           <View style={styles.blocksRow}>
             <View style={styles.numberBlock}>
-              <Text style={{fontSize: 12, color: '#495057'}}>
+              <Text style={{ fontSize: 12, color: '#495057' }}>
                 {data.prevMonth}
               </Text>
             </View>
 
             <View style={styles.numberBlock}>
-              <Text style={{fontSize: 18, color: '#00B686'}}>
+              <Text style={{ fontSize: 18, color: '#00B686' }}>
                 {data.percent} %
               </Text>
             </View>
             <View style={styles.numberBlock}>
-              <Text style={{fontSize: 12, color: '#495057'}}>
+              <Text style={{ fontSize: 12, color: '#495057' }}>
                 {data.currentMonth}
               </Text>
             </View>
@@ -74,11 +72,11 @@ export default function T1() {
               width: '100%',
             }}>
             {[...data.monthArray].reverse().map((month, index) => (
-              <View key={index} style={{width: '48%'}}>
+              <View key={index} style={{ width: '48%' }}>
                 {month.decadeArray.map((el, i) => (
-                  <View key={i} style={{width: '100%', marginVertical: 10}}>
+                  <View key={i} style={{ width: '100%', marginVertical: 10 }}>
                     <View style={styles.textRow}>
-                      <Text style={{color: '#506883', fontSize: 9}}>
+                      <Text style={{ color: '#506883', fontSize: 9 }}>
                         {month.name}
                       </Text>
                       <Text
@@ -114,7 +112,7 @@ export default function T1() {
                             ...styles.progress_item,
                             backgroundColor: colors[n],
                           }}>
-                          <Text style={{fontSize: 9, color: '#FFFFFF'}}>
+                          <Text style={{ fontSize: 9, color: '#FFFFFF' }}>
                             {s.amount}
                           </Text>
                           <Text
@@ -157,7 +155,7 @@ export default function T1() {
                 backgroundColor: colors[i],
               }}
             />
-            <Text style={{fontSize: 8}}> - {el.Name}</Text>
+            <Text style={{ fontSize: 8 }}> - {el.Name}</Text>
           </View>
         ))}
       </View>

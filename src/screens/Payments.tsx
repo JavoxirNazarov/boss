@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import TerminalIcon from '../assets/Terminal';
 import PaymentIcon from '../assets/Payment';
 import Click from '../assets/Click';
@@ -13,11 +13,11 @@ import {
   RefreshControl,
 } from 'react-native';
 import GoBack from '../components/Tables/GoBack';
-import {makeGetRequest} from '../dataManegment';
-import {useSelector} from 'react-redux';
-import {RootState} from '../redux/slices';
-import {formatDate} from '../utils/date';
-import {addSpace, handleError, wait} from '../utils';
+import { makeGetRequest } from '../dataManegment';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/slices';
+import { formatDate } from '../utils/date';
+import { addSpace, handleError, wait } from '../utils';
 
 type paymentType = {
   Name: string;
@@ -43,8 +43,8 @@ function placeIcon(type: string) {
   }
 }
 
-export default function Payments({navigation}: any) {
-  const {selectedDate, prevDate} = useSelector(
+export default function Payments({ navigation }: any) {
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [payments, setPayments] = useState<paymentType[]>([]);
@@ -77,8 +77,8 @@ export default function Payments({navigation}: any) {
       {payments.length ? (
         <>
           {payments.map((el, i) => (
-            <View key={i} style={{alignItems: 'center', marginVertical: 15}}>
-              <Text style={{marginVertical: 5, fontSize: 16}}>{el.Name}</Text>
+            <View key={i} style={{ alignItems: 'center', marginVertical: 15 }}>
+              <Text style={{ marginVertical: 5, fontSize: 16 }}>{el.Name}</Text>
               <View style={styles.row}>
                 {el.array.map((payment, j) => (
                   <TouchableHighlight
@@ -111,7 +111,7 @@ export default function Payments({navigation}: any) {
           ))}
         </>
       ) : (
-        <ActivityIndicator color="blue" style={{marginTop: 50}} />
+        <ActivityIndicator color="blue" style={{ marginTop: 50 }} />
       )}
     </ScrollView>
   );

@@ -25,6 +25,5 @@ const dateSlice = createSlice({
   },
 });
 
-// eslint-disable-next-line prettier/prettier
 export const { setStructures, selectStructure } = dateSlice.actions;
 export default dateSlice.reducer;

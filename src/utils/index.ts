@@ -1,4 +1,4 @@
-import { Alert } from "react-native";
+import { Alert } from 'react-native';
 
 export function addSpace(nums: any) {
   if (nums) {
@@ -14,7 +14,6 @@ export const wait = (timeout: number) => {
   });
 };
 
-
-export const handleError = (err: Error) => {
-  Alert.alert('Ошибка', err.message);
+export const handleError = (err: string) => {
+  Alert.alert('Ошибка', err);
 }

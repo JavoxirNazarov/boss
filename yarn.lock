@@ -5440,7 +5440,7 @@ mockdate@^3.0.2:
   resolved "https://registry.yarnpkg.com/mockdate/-/mockdate-3.0.5.tgz#789be686deb3149e7df2b663d2bc4392bc3284fb"
   integrity sha512-iniQP4rj1FhBdBYS/+eQv7j1tadJ9lJtdzgOpvsOHng/GbcDh2Fhdeq+ZRldrPYdXvCyfFUmFeEwEGXZB5I/AQ==
 
-moment@^2.24.0:
+moment@^2.24.0, moment@^2.29.1:
   version "2.29.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
   integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
@@ -6178,6 +6178,13 @@ react-native-linear-gradient@^2.5.6:
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
   integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
+
+react-native-modal-selector-searchable@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/react-native-modal-selector-searchable/-/react-native-modal-selector-searchable-2.1.4.tgz#b01751ff7aa43c41db02a043a42d90c226f8c5e8"
+  integrity sha512-58hSgwiN34+Z43NNAgBKqb5plTqtLEFyJfBHxeCkNkjQ8abSfIZrpCiyx43aA3uHDlmqKy4HOLOBstPs0E23rQ==
+  dependencies:
+    prop-types "^15.5.10"
 
 react-native-modal@^11.7.0:
   version "11.10.0"

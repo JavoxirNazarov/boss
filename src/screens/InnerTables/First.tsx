@@ -1,13 +1,19 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {Option, Select} from 'react-native-chooser';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { Option, Select } from 'react-native-chooser';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import GoBack from '../../components/Tables/GoBack';
-import {makeGetRequest} from '../../dataManegment';
-import {RootState} from '../../redux/slices';
-import {addSpace, handleError, wait} from '../../utils';
-import {formatDate} from '../../utils/date';
+import { makeGetRequest } from '../../dataManegment';
+import { RootState } from '../../redux/slices';
+import { addSpace, handleError, wait } from '../../utils';
+import { formatDate } from '../../utils/date';
 import useRole from '../../utils/useRole';
 
 type StatisticsType = {
@@ -23,10 +29,12 @@ type StatisticsType = {
   WithoutPayment: number;
 };
 
-export default function First({route}: any) {
-  const {isBoss} = useRole();
-  const {structures} = useSelector((state: RootState) => state.structuresState);
-  const {selectedDate, prevDate} = useSelector(
+export default function First({ route }: any) {
+  const { isBoss } = useRole();
+  const { structures } = useSelector(
+    (state: RootState) => state.structuresState,
+  );
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [structure, setStructure] = useState(route.params);
@@ -67,7 +75,7 @@ export default function First({route}: any) {
             transparent={true}
             indicatorIcon={<Icon name="angle-down" color="blue" size={25} />}
             onSelect={(value: string, label: string) => {
-              setStructure({Name: label, UIDStructure: value});
+              setStructure({ Name: label, UIDStructure: value });
             }}
             defaultText={structure.Name}
             style={styles.select}
@@ -95,76 +103,80 @@ export default function First({route}: any) {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <View style={{alignItems: 'center'}}>
-            <View style={{...styles.block, borderTopWidth: 0}}>
-              <Text style={{fontSize: 13, color: '#333333', fontWeight: '900'}}>
+          <View style={{ alignItems: 'center' }}>
+            <View style={{ ...styles.block, borderTopWidth: 0 }}>
+              <Text
+                style={{ fontSize: 13, color: '#333333', fontWeight: '900' }}>
                 Приходы
               </Text>
             </View>
             <View style={styles.block}>
-              <Text style={{fontSize: 13, color: '#333333'}}>Наличные</Text>
-              <Text style={{fontSize: 13, color: '#00B686'}}>
+              <Text style={{ fontSize: 13, color: '#333333' }}>Наличные</Text>
+              <Text style={{ fontSize: 13, color: '#00B686' }}>
                 {addSpace(statistcs.Cash)} сум
               </Text>
             </View>
             <View style={styles.block}>
-              <Text style={{fontSize: 13, color: '#333333'}}>Терминал</Text>
-              <Text style={{fontSize: 13, color: '#00B686'}}>
+              <Text style={{ fontSize: 13, color: '#333333' }}>Терминал</Text>
+              <Text style={{ fontSize: 13, color: '#00B686' }}>
                 {addSpace(statistcs.Terminal)} сум
               </Text>
             </View>
             <View style={styles.block}>
-              <Text style={{fontSize: 13, color: '#333333'}}>PayMe</Text>
-              <Text style={{fontSize: 13, color: '#00B686'}}>
+              <Text style={{ fontSize: 13, color: '#333333' }}>PayMe</Text>
+              <Text style={{ fontSize: 13, color: '#00B686' }}>
                 {addSpace(statistcs.Payme)} сум
               </Text>
             </View>
             <View style={styles.block}>
-              <Text style={{fontSize: 13, color: '#333333'}}>Click</Text>
-              <Text style={{fontSize: 13, color: '#00B686'}}>
+              <Text style={{ fontSize: 13, color: '#333333' }}>Click</Text>
+              <Text style={{ fontSize: 13, color: '#00B686' }}>
                 {addSpace(statistcs.Click)} сум
               </Text>
             </View>
             <View style={styles.block}>
-              <Text style={{fontSize: 13, color: '#333333'}}>Инкассация</Text>
-              <Text style={{fontSize: 13, color: '#00B686'}}>
+              <Text style={{ fontSize: 13, color: '#333333' }}>Инкассация</Text>
+              <Text style={{ fontSize: 13, color: '#00B686' }}>
                 {addSpace(statistcs.CashCollection)} сум
               </Text>
             </View>
             <View style={styles.block}>
               <Text
-                style={{fontSize: 13, color: '#333333', fontWeight: 'bold'}}>
+                style={{ fontSize: 13, color: '#333333', fontWeight: 'bold' }}>
                 Всего
               </Text>
-              <Text style={{fontSize: 13, color: '#00B686'}}>
+              <Text style={{ fontSize: 13, color: '#00B686' }}>
                 {addSpace(statistcs.AllIncome)} сум
               </Text>
             </View>
           </View>
-          <View style={{height: '88%', width: 1, backgroundColor: '#BDBDBD'}} />
-          <View style={{alignItems: 'center'}}>
-            <View style={{...styles.block, borderTopWidth: 0}}>
-              <Text style={{fontSize: 13, color: '#333333', fontWeight: '900'}}>
+          <View
+            style={{ height: '88%', width: 1, backgroundColor: '#BDBDBD' }}
+          />
+          <View style={{ alignItems: 'center' }}>
+            <View style={{ ...styles.block, borderTopWidth: 0 }}>
+              <Text
+                style={{ fontSize: 13, color: '#333333', fontWeight: '900' }}>
                 Расходы
               </Text>
             </View>
             <View style={styles.block}>
-              <Text style={{fontSize: 13, color: '#333333'}}>Без оплаты</Text>
-              <Text style={{fontSize: 13, color: '#E80054'}}>
+              <Text style={{ fontSize: 13, color: '#333333' }}>Без оплаты</Text>
+              <Text style={{ fontSize: 13, color: '#E80054' }}>
                 {addSpace(statistcs.WithoutPayment)} сум
               </Text>
             </View>
             <View style={styles.block}>
-              <Text style={{fontSize: 13, color: '#333333'}}>
+              <Text style={{ fontSize: 13, color: '#333333' }}>
                 Прочие расходы
               </Text>
-              <Text style={{fontSize: 13, color: '#E80054'}}>
+              <Text style={{ fontSize: 13, color: '#E80054' }}>
                 {addSpace(statistcs.OtherExpenses)} сум
               </Text>
             </View>
             <View style={styles.block}>
-              <Text style={{fontSize: 13, color: '#333333'}}>Авансы</Text>
-              <Text style={{fontSize: 13, color: '#E80054'}}>
+              <Text style={{ fontSize: 13, color: '#333333' }}>Авансы</Text>
+              <Text style={{ fontSize: 13, color: '#E80054' }}>
                 {addSpace(statistcs.Advance)} сум
               </Text>
             </View>
@@ -172,10 +184,10 @@ export default function First({route}: any) {
             <View style={styles.block} />
             <View style={styles.block}>
               <Text
-                style={{fontSize: 13, color: '#333333', fontWeight: 'bold'}}>
+                style={{ fontSize: 13, color: '#333333', fontWeight: 'bold' }}>
                 Всего
               </Text>
-              <Text style={{fontSize: 13, color: '#E80054'}}>
+              <Text style={{ fontSize: 13, color: '#E80054' }}>
                 {addSpace(statistcs.AllExpense)} сум
               </Text>
             </View>

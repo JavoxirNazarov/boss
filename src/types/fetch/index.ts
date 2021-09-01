@@ -35,6 +35,8 @@ export interface IStats {
   PitStopsAmount: number;
   PrizesAmount: number;
   PrizesSum: number;
+  WriteOffAmount: number;
+  AllWriteOffsAccepted: boolean;
 }
 
 export interface IStructures {

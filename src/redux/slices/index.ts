@@ -10,10 +10,8 @@ export const store = configureStore({
     structuresState: structuresSlice,
     userState: userSlice,
     pressedState: pressedSlice,
-  }
+  },
 });
 
-
-
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk = ThunkAction<void, RootState, unknown, Action<string>>;

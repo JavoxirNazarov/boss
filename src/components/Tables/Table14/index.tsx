@@ -1,8 +1,8 @@
-import React, {useEffect, useMemo} from 'react';
-import {Dimensions, Platform, StyleSheet, Text, View} from 'react-native';
+import React, { useEffect, useMemo } from 'react';
+import { Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import Svg from 'react-native-svg';
-import {useQuery} from 'react-query';
-import {useSelector} from 'react-redux';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 import {
   VictoryAxis,
   VictoryBar,
@@ -10,11 +10,11 @@ import {
   VictoryLabel,
   VictoryTheme,
 } from 'victory-native';
-import {queryRequest} from '../../../dataManegment';
-import {RootState} from '../../../redux/slices';
-import {formatDate} from '../../../utils/date';
-import {ErrorText, Loader} from '../../Feedbacks';
-const {width} = Dimensions.get('screen');
+import { makeGetRequest } from '../../../dataManegment';
+import { RootState } from '../../../redux/slices';
+import { formatDate } from '../../../utils/date';
+import { ErrorText, Loader } from '../../Feedbacks';
+const { width } = Dimensions.get('screen');
 
 type tableType = {
   date: string;
@@ -22,18 +22,14 @@ type tableType = {
   dateBack: string;
 };
 
-export default function Table141({navigation}: any) {
-  const {selectedDate} = useSelector((state: RootState) => state.dateState);
+export default function Table141({ navigation }: any) {
+  const { selectedDate } = useSelector((state: RootState) => state.dateState);
 
-  const {isLoading, data, isError, refetch} = useQuery<tableType[]>(
-    `data-pizzamountweek`,
-    () => queryRequest('pizzamountweek/' + formatDate(selectedDate)),
-    {retry: false},
+  const { isLoading, data, isError } = useQuery<tableType[]>(
+    ['data-pizzamountweek', selectedDate],
+    () => makeGetRequest('pizzamountweek/' + formatDate(selectedDate)),
+    {},
   );
-
-  useEffect(() => {
-    refetch();
-  }, [selectedDate, refetch]);
 
   const bars = useMemo(() => {
     return data?.map((el) => ({
@@ -52,21 +48,21 @@ export default function Table141({navigation}: any) {
       {isLoading && <Loader />}
 
       {Platform.OS == 'android' ? (
-        <Svg width={width - 40} height={270} style={{paddingLeft: 20}}>
+        <Svg width={width - 40} height={270} style={{ paddingLeft: 20 }}>
           <VictoryChart
-            domainPadding={{x: 10}}
+            domainPadding={{ x: 10 }}
             height={270}
             theme={VictoryTheme.material}>
             <VictoryAxis
               dependentAxis={true}
               style={{
-                grid: {stroke: '#CCCCCC', strokeDasharray: 0},
-                axisLabel: {width: 5},
+                grid: { stroke: '#CCCCCC', strokeDasharray: 0 },
+                axisLabel: { width: 5 },
               }}
             />
             <VictoryAxis
               style={{
-                grid: {stroke: '#CCCCCC', strokeDasharray: 0},
+                grid: { stroke: '#CCCCCC', strokeDasharray: 0 },
               }}
             />
             <VictoryBar
@@ -76,9 +72,9 @@ export default function Table141({navigation}: any) {
                 labels: {
                   fill: '#fff',
                 },
-                data: {fill: '#495057'},
+                data: { fill: '#495057' },
               }}
-              labels={({datum}) => (datum.y ? datum.y : '')}
+              labels={({ datum }) => (datum.y ? datum.y : '')}
               data={bars}
               events={[
                 {
@@ -88,7 +84,7 @@ export default function Table141({navigation}: any) {
                       return [
                         {
                           target: 'data',
-                          mutation: ({datum}) => {
+                          mutation: ({ datum }) => {
                             if (datum.dateBack) {
                               navigation.navigate('Fourteenth', {
                                 date: datum.dateBack,
@@ -106,19 +102,19 @@ export default function Table141({navigation}: any) {
         </Svg>
       ) : (
         <VictoryChart
-          domainPadding={{x: 15}}
+          domainPadding={{ x: 15 }}
           height={270}
           theme={VictoryTheme.material}>
           <VictoryAxis
             dependentAxis={true}
             style={{
-              grid: {stroke: '#CCCCCC', strokeDasharray: 0},
-              axisLabel: {width: 5},
+              grid: { stroke: '#CCCCCC', strokeDasharray: 0 },
+              axisLabel: { width: 5 },
             }}
           />
           <VictoryAxis
             style={{
-              grid: {stroke: '#CCCCCC', strokeDasharray: 0},
+              grid: { stroke: '#CCCCCC', strokeDasharray: 0 },
             }}
           />
           <VictoryBar
@@ -128,9 +124,9 @@ export default function Table141({navigation}: any) {
               labels: {
                 fill: '#fff',
               },
-              data: {fill: '#495057'},
+              data: { fill: '#495057' },
             }}
-            labels={({datum}) => (datum.y ? datum.y : '')}
+            labels={({ datum }) => (datum.y ? datum.y : '')}
             data={bars}
             events={[
               {
@@ -140,7 +136,7 @@ export default function Table141({navigation}: any) {
                     return [
                       {
                         target: 'data',
-                        mutation: ({datum}) => {
+                        mutation: ({ datum }) => {
                           if (datum.dateBack) {
                             navigation.navigate('Fourteenth', {
                               date: datum.dateBack,

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -8,14 +8,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Option, Select} from 'react-native-chooser';
+import { Option, Select } from 'react-native-chooser';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import GoBack from '../components/Tables/GoBack';
-import {makeGetRequest} from '../dataManegment';
-import {RootState} from '../redux/slices';
-import {addSpace, handleError, wait} from '../utils';
-import {formatDate} from '../utils/date';
+import { makeGetRequest } from '../dataManegment';
+import { RootState } from '../redux/slices';
+import { addSpace, handleError, wait } from '../utils';
+import { formatDate } from '../utils/date';
 
 type partnerType = {
   UIDPartner: string;
@@ -29,13 +29,13 @@ type listType = {
   Amount: number;
 };
 
-export default function PartnerList({navigation}: any) {
-  const {selectedDate, prevDate} = useSelector(
+export default function PartnerList({ navigation }: any) {
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
 
   const [partners, setPartners] = useState<partnerType[]>([]);
-  const [selected, setSelected] = useState({UIDPartner: '', Name: ''});
+  const [selected, setSelected] = useState({ UIDPartner: '', Name: '' });
   // ========
   const [yellowList, setYellowList] = useState<listType[]>([]);
   const [greenList, setGreenList] = useState<listType[]>([]);
@@ -104,14 +104,14 @@ export default function PartnerList({navigation}: any) {
       <TouchableOpacity
         onPress={() => navigation.navigate('Act')}
         style={styles.downloadBtn}>
-        <Text style={{color: '#fff', fontSize: 16}}>Акт сверки</Text>
+        <Text style={{ color: '#fff', fontSize: 16 }}>Акт сверки</Text>
       </TouchableOpacity>
 
       <Select
         transparent={true}
         indicatorIcon={<Icon name="angle-down" color="blue" size={25} />}
         onSelect={(value: string, label: string) =>
-          setSelected({Name: label, UIDPartner: value})
+          setSelected({ Name: label, UIDPartner: value })
         }
         defaultText={selected.Name}
         style={styles.select}
@@ -122,7 +122,7 @@ export default function PartnerList({navigation}: any) {
         }}>
         {partners.map((el, i) => (
           <Option
-            style={{paddingVertical: 10, borderBottomWidth: 1}}
+            style={{ paddingVertical: 10, borderBottomWidth: 1 }}
             key={i}
             value={el.UIDPartner}>
             {el?.Name}
@@ -136,15 +136,21 @@ export default function PartnerList({navigation}: any) {
             const yl = yellowList[i];
 
             return (
-              <View key={i} style={{alignItems: 'center', marginVertical: 15}}>
+              <View
+                key={i}
+                style={{ alignItems: 'center', marginVertical: 15 }}>
                 <Text
-                  style={{marginVertical: 5, fontSize: 19, fontWeight: 'bold'}}>
+                  style={{
+                    marginVertical: 5,
+                    fontSize: 19,
+                    fontWeight: 'bold',
+                  }}>
                   {gr?.Name}: {selected?.Name}
                 </Text>
                 <View style={styles.block}>
                   <TouchableOpacity
                     onPress={() => routeByType(gr.UIDStructure, 'green')}
-                    style={{...styles.block_half, backgroundColor: 'green'}}>
+                    style={{ ...styles.block_half, backgroundColor: 'green' }}>
                     <>
                       <View style={styles.block_circle}>
                         <Text style={styles.block_circle_num}>
@@ -158,7 +164,7 @@ export default function PartnerList({navigation}: any) {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => routeByType(yl.UIDStructure, 'yellow')}
-                    style={{...styles.block_half, backgroundColor: 'yellow'}}>
+                    style={{ ...styles.block_half, backgroundColor: 'yellow' }}>
                     <>
                       <View style={styles.block_circle}>
                         <Text style={styles.block_circle_num}>
@@ -176,7 +182,7 @@ export default function PartnerList({navigation}: any) {
           })}
         </>
       ) : (
-        <ActivityIndicator color="blue" style={{marginTop: 50}} />
+        <ActivityIndicator color="blue" style={{ marginTop: 50 }} />
       )}
     </ScrollView>
   );

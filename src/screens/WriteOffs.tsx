@@ -15,19 +15,18 @@ import { RootState } from '../redux/slices';
 import { formatDate } from '../utils/date';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
-import { addSpace, handleError, wait } from '../utils';
+import { handleError, wait } from '../utils';
 
 type listType = {
-  OrderNumber: string;
-  PaymentComment: string;
-  Structure: string;
-  Sum: number;
-  Time: string;
-  UIDOrder: string;
-  accepted: boolean;
+  UIDWriteOff: string;
+  Number: string;
+  Date: string;
+  Accepted: boolean;
+  BossAccepted: boolean;
+  Comment: string;
 };
 
-export default function Orders({ route, navigation }: any) {
+export default function WriteOffs({ route, navigation }: any) {
   const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
@@ -44,7 +43,7 @@ export default function Orders({ route, navigation }: any) {
 
   function refresh() {
     makeGetRequest(
-      `orderpaymentless/${formatDate(prevDate)}/${formatDate(
+      `writeoffs/${formatDate(prevDate)}/${formatDate(
         selectedDate,
       )}?UIDStructure=${structure}`,
     )
@@ -56,15 +55,15 @@ export default function Orders({ route, navigation }: any) {
   useEffect(refresh, []);
 
   const accept = (el: listType) => {
-    sendData('accept', {
-      UIDOrder: el.UIDOrder,
-      Accepted: !el.accepted,
+    sendData('writeoffs/1/1', {
+      UIDWriteOff: el.UIDWriteOff,
+      BossAccepted: !el.BossAccepted,
     })
       .then(() => {
         setList((prev) =>
           prev.map((item) => {
-            return item.UIDOrder === el.UIDOrder
-              ? { ...item, accepted: !el.accepted }
+            return item.UIDWriteOff === el.UIDWriteOff
+              ? { ...item, BossAccepted: !el.BossAccepted }
               : item;
           }),
         );
@@ -93,22 +92,24 @@ export default function Orders({ route, navigation }: any) {
           size={30}
           color="#fff"
         />
-        <Text style={{ color: '#fff', fontSize: 20 }}>Без оплат</Text>
+        <Text style={{ color: '#fff', fontSize: 20 }}>Списания</Text>
         <View />
       </LinearGradient>
 
       {!fetching ? (
-        list.length ? (
-          list.map((el, i) => (
+        list?.length ? (
+          list?.map((el, i) => (
             <TouchableOpacity
-              onPress={() => navigation.navigate('Order', { id: el.UIDOrder })}
+              onPress={() =>
+                navigation.navigate('WriteOff', { id: el.UIDWriteOff })
+              }
               key={i}
               style={{
                 flexDirection: 'row',
                 borderBottomWidth: 1,
                 paddingHorizontal: 5,
                 paddingVertical: 10,
-                backgroundColor: el.accepted ? '#FFFFFF' : '#e31b3d',
+                backgroundColor: el.BossAccepted ? '#FFFFFF' : '#e31b3d',
               }}>
               <View
                 style={{
@@ -116,9 +117,7 @@ export default function Orders({ route, navigation }: any) {
                   alignItems: 'center',
                   justifyContent: 'space-around',
                 }}>
-                <Text>{el.OrderNumber}</Text>
-
-                {el.accepted ? (
+                {el.BossAccepted ? (
                   <Icon
                     onPress={() => accept(el)}
                     name="checkbox-marked"
@@ -136,22 +135,18 @@ export default function Orders({ route, navigation }: any) {
               </View>
               <View style={{ flex: 1 }}>
                 <View style={styles.textRow}>
-                  <Text>Структура</Text>
-                  <Text>{el.Structure}</Text>
+                  <Text>Номер</Text>
+                  <Text>{el.Number}</Text>
                 </View>
                 <View style={styles.textRow}>
                   <Text>Дата</Text>
-                  <Text>{el.Time}</Text>
+                  <Text>{el.Date}</Text>
                 </View>
                 <View style={styles.textRow}>
                   <Text>Коментарий</Text>
                   <Text style={{ width: '50%', textAlign: 'right' }}>
-                    {el.PaymentComment || 'не указана'}
+                    {el.Comment || 'не указана'}
                   </Text>
-                </View>
-                <View style={styles.textRow}>
-                  <Text>Сумма</Text>
-                  <Text>{addSpace(el.Sum)}</Text>
                 </View>
               </View>
             </TouchableOpacity>

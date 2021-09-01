@@ -1,4 +1,5 @@
-import React, {useCallback, useEffect, useState} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -8,27 +9,44 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import GoBack from '../components/Tables/GoBack';
-import {makeGetRequest} from '../dataManegment';
-import {RootState} from '../redux/slices';
-import {addSpace, handleError, wait} from '../utils';
-import {formatDate} from '../utils/date';
+import { makeGetRequest } from '../dataManegment';
+import { RootState } from '../redux/slices';
+import { addSpace, handleError, wait } from '../utils';
+import { formatDate } from '../utils/date';
 
 type listType = {
   Name: string;
   UIDStructure: string;
-  Sum: number;
+  Sum?: number;
   Amount: number;
   AllAccepted?: boolean;
 };
 
-export default function TypeSales({route, navigation}: any) {
+const reqObj = {
+  Реклама: 'advertising',
+  'Сумма без оплат': 'ordernpstructure',
+  Инкасация: 'cashcollection',
+  Штрафы: 'penalties',
+  Питстопы: 'pitstops',
+  Списания: 'writeoffs',
+  'Доп. Работа': 'prizes',
+  Авансы: false,
+  Расходы: false,
+};
+
+interface IProps {
+  route: { params: { type: keyof typeof reqObj } };
+  navigation: any;
+}
+
+export default function TypeSales({ route, navigation }: IProps) {
   const [list, setList] = useState<listType[]>([]);
-  const {selectedDate, prevDate} = useSelector(
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
-  const {type} = route.params;
+  const { type } = route.params;
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -41,31 +59,9 @@ export default function TypeSales({route, navigation}: any) {
   async function refresh() {
     try {
       let res;
-      if (type === 'Реклама') {
+      if (reqObj[type]) {
         res = await makeGetRequest(
-          `advertising/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
-        );
-      } else if (type === 'Сумма без оплат') {
-        res = await makeGetRequest(
-          `ordernpstructure/${formatDate(prevDate)}/${formatDate(
-            selectedDate,
-          )}`,
-        );
-      } else if (type === 'Инкасация') {
-        res = await makeGetRequest(
-          `cashcollection/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
-        );
-      } else if (type === 'Штрафы') {
-        res = await makeGetRequest(
-          `penalties/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
-        );
-      } else if (type === 'Доп. Работа') {
-        res = await makeGetRequest(
-          `prizes/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
-        );
-      } else if (type === 'Питстопы') {
-        res = await makeGetRequest(
-          `pitstops/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
+          `${reqObj[type]}/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
         );
       } else {
         res = await makeGetRequest(
@@ -87,22 +83,22 @@ export default function TypeSales({route, navigation}: any) {
   function routeByType(structure: string) {
     switch (type) {
       case 'Сумма без оплат':
-        return navigation.navigate('Without', {structure});
+        return navigation.navigate('Without', { structure });
+      case 'Списания':
+        return navigation.navigate('WriteOffs', { structure });
       case 'Инкасация':
       case 'Доп. Работа':
       case 'Штрафы':
       case 'Питстопы':
-        return navigation.navigate('CollectionAndPrize', {structure, type});
+        return navigation.navigate('CollectionAndPrize', { structure, type });
       case 'Реклама':
-        return navigation.navigate('Orders', {uid: structure, type});
+        return navigation.navigate('Orders', { uid: structure, type });
       case 'Авансы':
-        return navigation.navigate('AdvanceTypes', {structure});
+        return navigation.navigate('AdvanceTypes', { structure });
       default:
-        return navigation.navigate('Expense', {structure});
+        return navigation.navigate('Expense', { structure });
     }
   }
-
-  console.log(list);
 
   return (
     <ScrollView
@@ -113,36 +109,34 @@ export default function TypeSales({route, navigation}: any) {
       <GoBack />
 
       {list.length ? (
-        <>
-          {list.map((el, i) => (
-            <View key={i} style={{alignItems: 'center', marginVertical: 15}}>
-              <Text style={{marginVertical: 5, fontSize: 16}}>{el.Name}</Text>
-              <TouchableOpacity
-                onPress={() => routeByType(el.UIDStructure)}
-                style={{
-                  ...styles.block,
-                  backgroundColor:
-                    el.AllAccepted !== undefined
-                      ? el.AllAccepted
-                        ? '#20ba27'
-                        : '#e31b3d'
-                      : '#FFFFFF',
-                }}>
-                <View style={{justifyContent: 'space-evenly', height: '100%'}}>
-                  <Text style={styles.block_title}>{type}</Text>
-                  {type !== 'Питстопы' && (
-                    <Text style={styles.block_sum}>{addSpace(el.Sum)} сум</Text>
-                  )}
-                </View>
-                <View style={styles.block_circle}>
-                  <Text style={styles.block_circle_num}>{el.Amount}</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </>
+        list.map((el, i) => (
+          <View key={i} style={{ alignItems: 'center', marginVertical: 15 }}>
+            <Text style={{ marginVertical: 5, fontSize: 16 }}>{el.Name}</Text>
+            <TouchableOpacity
+              onPress={() => routeByType(el.UIDStructure)}
+              style={{
+                ...styles.block,
+                backgroundColor:
+                  el.AllAccepted !== undefined
+                    ? el.AllAccepted
+                      ? '#20ba27'
+                      : '#e31b3d'
+                    : '#FFFFFF',
+              }}>
+              <View style={{ justifyContent: 'space-evenly', height: '100%' }}>
+                <Text style={styles.block_title}>{type}</Text>
+                {el.Sum !== undefined && (
+                  <Text style={styles.block_sum}>{addSpace(el.Sum)} сум</Text>
+                )}
+              </View>
+              <View style={styles.block_circle}>
+                <Text style={styles.block_circle_num}>{el.Amount}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ))
       ) : (
-        <ActivityIndicator color="blue" style={{marginTop: 50}} />
+        <ActivityIndicator color="blue" style={{ marginTop: 50 }} />
       )}
     </ScrollView>
   );

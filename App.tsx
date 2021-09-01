@@ -8,15 +8,15 @@
  * @format
  */
 
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import React, {useEffect} from 'react';
-import {SafeAreaView, StatusBar} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import React, { useEffect } from 'react';
+import { SafeAreaView, StatusBar } from 'react-native';
 import FingerprintScanner from 'react-native-fingerprint-scanner';
 import SplashScreen from 'react-native-splash-screen';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from './src/redux/slices';
-import {setUser} from './src/redux/slices/user-slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from './src/redux/slices';
+import { setUser } from './src/redux/slices/user-slice';
 import Advances from './src/screens/Advances';
 import AdvanceTypes from './src/screens/AdvanceTypes';
 import CollectionAndPrize from './src/screens/CollectionAndPrize';
@@ -50,15 +50,20 @@ import Section from './src/screens/Section';
 import Sections from './src/screens/Sections';
 import TypeSales from './src/screens/TypeSales';
 import Without from './src/screens/Without';
-import {getUser} from './src/utils/getUser';
+import { getUser } from './src/utils/getUser';
 import Settings from './src/screens/Settings';
 import Act from './src/screens/Act';
+import WriteOffs from './src/screens/WriteOffs';
+import WriteOff from './src/screens/WriteOff';
+import Balance from './src/screens/Balance';
+import Users from './src/screens/Users';
+import User from './src/screens/User';
 
 const Stack = createStackNavigator();
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
-  const {user} = useSelector((state: RootState) => state.userState);
+  const { user } = useSelector((state: RootState) => state.userState);
 
   useEffect(() => {
     SplashScreen.hide();
@@ -82,12 +87,12 @@ const App: React.FC = () => {
           .catch(() => dispatch(setUser(JSON.parse(res))));
       }
     });
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1 }}>
         <NavigationContainer>
           <Stack.Navigator headerMode="none">
             {user ? (
@@ -103,6 +108,12 @@ const App: React.FC = () => {
                 <Stack.Screen name="Advances" component={Advances} />
                 <Stack.Screen name="Expense" component={Expense} />
                 <Stack.Screen name="Without" component={Without} />
+                <Stack.Screen name="WriteOffs" component={WriteOffs} />
+                <Stack.Screen name="WriteOff" component={WriteOff} />
+                <Stack.Screen name="Balance" component={Balance} />
+                <Stack.Screen name="Users" component={Users} />
+                <Stack.Screen name="User" component={User} />
+
                 <Stack.Screen
                   name="CollectionAndPrize"
                   component={CollectionAndPrize}

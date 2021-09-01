@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -9,11 +9,11 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useSelector} from 'react-redux';
-import {makeGetRequest, sendData} from '../dataManegment';
-import {RootState} from '../redux/slices';
-import {addSpace, handleError, wait} from '../utils';
-import {formatDate} from '../utils/date';
+import { useSelector } from 'react-redux';
+import { makeGetRequest, sendData } from '../dataManegment';
+import { RootState } from '../redux/slices';
+import { addSpace, handleError, wait } from '../utils';
+import { formatDate } from '../utils/date';
 
 type listType = {
   cashier: string;
@@ -27,13 +27,13 @@ type listType = {
   accepted?: boolean;
 };
 
-export default function Orders({route, navigation}: any) {
-  const {selectedDate, prevDate} = useSelector(
+export default function Orders({ route, navigation }: any) {
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [list, setList] = useState<listType[]>([]);
   const [fetching, setFetching] = useState(true);
-  const {structure} = route.params;
+  const { structure } = route.params;
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -64,7 +64,7 @@ export default function Orders({route, navigation}: any) {
       .then((res) => {
         setList((prev) =>
           prev.map((item) => {
-            return item.UIDExpense == UID ? {...item, accepted: val} : item;
+            return item.UIDExpense == UID ? { ...item, accepted: val } : item;
           }),
         );
       })
@@ -76,7 +76,7 @@ export default function Orders({route, navigation}: any) {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
-      style={{width: '100%'}}>
+      style={{ width: '100%' }}>
       <LinearGradient
         colors={['#CD4629', '#FF5733']}
         style={{
@@ -92,7 +92,7 @@ export default function Orders({route, navigation}: any) {
           size={30}
           color="#fff"
         />
-        <Text style={{color: '#fff', fontSize: 20}}>Все Расходы</Text>
+        <Text style={{ color: '#fff', fontSize: 20 }}>Все Расходы</Text>
         <View />
       </LinearGradient>
 
@@ -138,11 +138,11 @@ export default function Orders({route, navigation}: any) {
                 </View>
                 <View style={styles.textRow}>
                   <Text>Коментарий</Text>
-                  <Text style={{width: '50%'}}>
+                  <Text style={{ width: '50%' }}>
                     {el.comment || 'не указана'}
                   </Text>
                 </View>
-                <View style={{alignItems: 'flex-end'}}>
+                <View style={{ alignItems: 'flex-end' }}>
                   {el.accepted !== undefined &&
                     (el.accepted ? (
                       <Icon
@@ -163,7 +163,7 @@ export default function Orders({route, navigation}: any) {
               </View>
             ))
           ) : (
-            <Text style={{alignSelf: 'center', marginTop: 50, fontSize: 18}}>
+            <Text style={{ alignSelf: 'center', marginTop: 50, fontSize: 18 }}>
               Чеков нет
             </Text>
           )}

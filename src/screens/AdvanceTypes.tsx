@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -8,12 +8,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import GoBack from '../components/Tables/GoBack';
-import {makeGetRequest} from '../dataManegment';
-import {RootState} from '../redux/slices';
-import {addSpace, handleError, wait} from '../utils';
-import {formatDate} from '../utils/date';
+import { makeGetRequest } from '../dataManegment';
+import { RootState } from '../redux/slices';
+import { addSpace, handleError, wait } from '../utils';
+import { formatDate } from '../utils/date';
 
 type listType = {
   Name: string;
@@ -26,12 +26,12 @@ type infoType = {
   total: number;
 };
 
-export default function AdvanceTypes({route, navigation}: any) {
+export default function AdvanceTypes({ route, navigation }: any) {
   const [info, setInfo] = useState<Partial<infoType>>({});
-  const {selectedDate, prevDate} = useSelector(
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
-  const {structure} = route.params;
+  const { structure } = route.params;
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
@@ -53,7 +53,7 @@ export default function AdvanceTypes({route, navigation}: any) {
   useEffect(refresh, []);
 
   function routeByType(position: string) {
-    navigation.navigate('Advances', {structure, position});
+    navigation.navigate('Advances', { structure, position });
   }
 
   return (
@@ -67,7 +67,7 @@ export default function AdvanceTypes({route, navigation}: any) {
       {info.total ? (
         <>
           {info?.positions?.map((el, i) => (
-            <View key={i} style={{alignItems: 'center', marginVertical: 15}}>
+            <View key={i} style={{ alignItems: 'center', marginVertical: 15 }}>
               <TouchableOpacity
                 onPress={() => routeByType(el.UIDPosition)}
                 style={styles.block}>
@@ -78,7 +78,7 @@ export default function AdvanceTypes({route, navigation}: any) {
           ))}
         </>
       ) : (
-        <ActivityIndicator color="blue" style={{marginTop: 50}} />
+        <ActivityIndicator color="blue" style={{ marginTop: 50 }} />
       )}
     </ScrollView>
   );

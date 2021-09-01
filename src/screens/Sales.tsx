@@ -1,4 +1,4 @@
-import React, {Fragment, useCallback, useEffect, useState} from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,12 +8,12 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import GoBack from '../components/Tables/GoBack';
-import {makeGetRequest} from '../dataManegment';
-import {RootState} from '../redux/slices';
-import {addSpace, handleError, wait} from '../utils';
-import {formatDate} from '../utils/date';
+import { makeGetRequest } from '../dataManegment';
+import { RootState } from '../redux/slices';
+import { addSpace, handleError, wait } from '../utils';
+import { formatDate } from '../utils/date';
 
 type salesType = {
   Amount: number;
@@ -23,8 +23,8 @@ type salesType = {
   UIDStructure: string;
 };
 
-export default function Sales({navigation}: any) {
-  const {selectedDate, prevDate} = useSelector(
+export default function Sales({ navigation }: any) {
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [sales, setSales] = useState<salesType[]>([]);
@@ -58,7 +58,7 @@ export default function Sales({navigation}: any) {
       {sales.length ? (
         sales.map((el, i) => (
           <Fragment key={i}>
-            <Text style={{alignSelf: 'center'}}>{el.Name}</Text>
+            <Text style={{ alignSelf: 'center' }}>{el.Name}</Text>
             <View style={styles.main}>
               <TouchableOpacity
                 onPress={() =>
@@ -67,7 +67,7 @@ export default function Sales({navigation}: any) {
                     structureName: el.Name,
                   })
                 }
-                style={{...styles.row, backgroundColor: '#ccc'}}>
+                style={{ ...styles.row, backgroundColor: '#ccc' }}>
                 <Text style={styles.mainText}>Сумма продаж</Text>
                 <Text style={styles.mainText}>{addSpace(el.Sum)} сум </Text>
               </TouchableOpacity>
@@ -78,11 +78,11 @@ export default function Sales({navigation}: any) {
                     structureName: el.Name,
                   })
                 }
-                style={{...styles.row}}>
-                <Text style={{...styles.mainText, textAlign: 'right'}}>
+                style={{ ...styles.row }}>
+                <Text style={{ ...styles.mainText, textAlign: 'right' }}>
                   {el.Percent}%
                 </Text>
-                <Text style={{...styles.mainText, textAlign: 'right'}}>
+                <Text style={{ ...styles.mainText, textAlign: 'right' }}>
                   {el.Amount} шт.
                 </Text>
               </TouchableOpacity>
@@ -90,7 +90,7 @@ export default function Sales({navigation}: any) {
           </Fragment>
         ))
       ) : (
-        <ActivityIndicator color="blue" style={{marginTop: 50}} />
+        <ActivityIndicator color="blue" style={{ marginTop: 50 }} />
       )}
     </ScrollView>
   );

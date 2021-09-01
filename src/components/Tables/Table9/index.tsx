@@ -1,12 +1,12 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useQuery} from 'react-query';
-import {useSelector} from 'react-redux';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 import Clock from '../../../assets/Clock';
-import {queryRequest} from '../../../dataManegment';
-import {RootState} from '../../../redux/slices';
-import {formatDate} from '../../../utils/date';
-import {ErrorText, Loader} from '../../Feedbacks';
+import { makeGetRequest } from '../../../dataManegment';
+import { RootState } from '../../../redux/slices';
+import { formatDate } from '../../../utils/date';
+import { ErrorText, Loader } from '../../Feedbacks';
 
 type infoType = {
   Name: string;
@@ -15,23 +15,19 @@ type infoType = {
   UIDStructure: string;
 };
 
-export default function Table18({navigation}: any) {
-  const {selectedDate, prevDate} = useSelector(
+export default function Table18({ navigation }: any) {
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
 
-  const {isLoading, data, isError, refetch} = useQuery<infoType[]>(
-    `table-awaittime`,
+  const { isLoading, data, isError } = useQuery<infoType[]>(
+    ['table-awaittime', selectedDate, prevDate],
     () =>
-      queryRequest(
+      makeGetRequest(
         `awaittime/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
       ),
-    {retry: false},
+    {},
   );
-
-  useEffect(() => {
-    refetch();
-  }, [selectedDate, prevDate, refetch]);
 
   function select(el: infoType) {
     navigation.navigate('Nineth', {
@@ -54,7 +50,7 @@ export default function Table18({navigation}: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Заказы ожидающие курьеров</Text>
-      <Clock style={{marginTop: 20}} />
+      <Clock style={{ marginTop: 20 }} />
       {isLoading && <Loader />}
       {data && (
         <View style={styles.row}>
@@ -62,7 +58,7 @@ export default function Table18({navigation}: any) {
             <TouchableOpacity
               key={i}
               onPress={() => select(el)}
-              style={{width: '50%', alignItems: 'center', marginBottom: 15}}>
+              style={{ width: '50%', alignItems: 'center', marginBottom: 15 }}>
               <Text style={styles.text}>{el.Name}</Text>
               <View style={styles.circle}>
                 <Text style={styles.text}>{minuteToHour(el.TimeShift)}</Text>

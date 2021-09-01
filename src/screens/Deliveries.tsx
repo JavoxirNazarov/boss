@@ -1,4 +1,4 @@
-import React, {Fragment, useCallback, useEffect, useState} from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,13 +8,13 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import {useSelector} from 'react-redux';
-import {makeGetRequest} from '../dataManegment';
-import {RootState} from '../redux/slices';
-import {formatDate} from '../utils/date';
+import { useSelector } from 'react-redux';
+import { makeGetRequest } from '../dataManegment';
+import { RootState } from '../redux/slices';
+import { formatDate } from '../utils/date';
 import DeliveryIcon from '../assets/Car1';
 import GoBack from '../components/Tables/GoBack';
-import {addSpace, handleError, wait} from '../utils';
+import { addSpace, handleError, wait } from '../utils';
 
 type deliveriesType = {
   Amount: number;
@@ -24,8 +24,8 @@ type deliveriesType = {
   UIDStructure: string;
 };
 
-export default function Deliveries({navigation}: any) {
-  const {selectedDate, prevDate} = useSelector(
+export default function Deliveries({ navigation }: any) {
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [deliveries, setDeliveries] = useState<deliveriesType[]>([]);
@@ -58,7 +58,7 @@ export default function Deliveries({navigation}: any) {
       {deliveries.length ? (
         deliveries.map((el, i) => (
           <Fragment key={i}>
-            <Text style={{alignSelf: 'center'}}>{el.Name}</Text>
+            <Text style={{ alignSelf: 'center' }}>{el.Name}</Text>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('Orders', {
@@ -73,11 +73,19 @@ export default function Deliveries({navigation}: any) {
                   height: '100%',
                 }}>
                 <Text
-                  style={{color: '#FFFFFF', fontWeight: 'bold', fontSize: 14}}>
+                  style={{
+                    color: '#FFFFFF',
+                    fontWeight: 'bold',
+                    fontSize: 14,
+                  }}>
                   Количество доставок
                 </Text>
                 <Text
-                  style={{color: '#FFFFFF', fontWeight: 'bold', fontSize: 24}}>
+                  style={{
+                    color: '#FFFFFF',
+                    fontWeight: 'bold',
+                    fontSize: 24,
+                  }}>
                   {addSpace(el.Sum)} сум
                 </Text>
               </View>
@@ -92,7 +100,7 @@ export default function Deliveries({navigation}: any) {
                 {el.Amount}
               </Text>
 
-              <DeliveryIcon style={{top: 5}} />
+              <DeliveryIcon style={{ top: 5 }} />
 
               <Text
                 style={{
@@ -109,7 +117,7 @@ export default function Deliveries({navigation}: any) {
           </Fragment>
         ))
       ) : (
-        <ActivityIndicator color="blue" style={{marginTop: 50}} />
+        <ActivityIndicator color="blue" style={{ marginTop: 50 }} />
       )}
     </ScrollView>
   );

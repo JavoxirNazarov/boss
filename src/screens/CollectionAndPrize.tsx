@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -9,11 +9,11 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useSelector} from 'react-redux';
-import {makeGetRequest} from '../dataManegment';
-import {RootState} from '../redux/slices';
-import {addSpace, handleError, wait} from '../utils';
-import {formatDate} from '../utils/date';
+import { useSelector } from 'react-redux';
+import { makeGetRequest } from '../dataManegment';
+import { RootState } from '../redux/slices';
+import { addSpace, handleError, wait } from '../utils';
+import { formatDate } from '../utils/date';
 
 type listType = {
   cashier?: string;
@@ -27,11 +27,11 @@ type listType = {
   dateStart: string;
 };
 
-export default function CollectionAndPrize({route, navigation}: any) {
-  const {selectedDate, prevDate} = useSelector(
+export default function CollectionAndPrize({ route, navigation }: any) {
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
-  const {structure, type} = route.params;
+  const { structure, type } = route.params;
 
   const [list, setList] = useState<listType[]>([]);
   const [fetching, setFetching] = useState(true);
@@ -74,7 +74,6 @@ export default function CollectionAndPrize({route, navigation}: any) {
       .catch(handleError)
       .finally(() => setFetching(false));
   }
-  console.log(list);
 
   useEffect(refresh, [structure, prevDate, selectedDate]);
 
@@ -83,7 +82,7 @@ export default function CollectionAndPrize({route, navigation}: any) {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
-      style={{width: '100%'}}>
+      style={{ width: '100%' }}>
       <LinearGradient
         colors={['#CD4629', '#FF5733']}
         style={{
@@ -100,7 +99,7 @@ export default function CollectionAndPrize({route, navigation}: any) {
           size={30}
           color="#fff"
         />
-        <Text style={{color: '#fff', fontSize: 20}}>{type}</Text>
+        <Text style={{ color: '#fff', fontSize: 20 }}>{type}</Text>
         <View />
       </LinearGradient>
 
@@ -115,8 +114,8 @@ export default function CollectionAndPrize({route, navigation}: any) {
                   borderBottomWidth: 1,
                   padding: 10,
                 }}>
-                <View style={{flex: 1}}>
-                  <Text style={{textAlign: 'center', fontWeight: 'bold'}}>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
                     {el.name || el.number}
                   </Text>
                   <View style={styles.textRow}>
@@ -149,7 +148,7 @@ export default function CollectionAndPrize({route, navigation}: any) {
                   )}
                   <View style={styles.textRow}>
                     <Text>Коментарий</Text>
-                    <Text style={{width: '50%', textAlign: 'right'}}>
+                    <Text style={{ width: '50%', textAlign: 'right' }}>
                       {el.comment || 'не указана'}
                     </Text>
                   </View>
@@ -157,13 +156,13 @@ export default function CollectionAndPrize({route, navigation}: any) {
               </View>
             ))
           ) : (
-            <Text style={{alignSelf: 'center', marginTop: 50, fontSize: 18}}>
+            <Text style={{ alignSelf: 'center', marginTop: 50, fontSize: 18 }}>
               Чеков нет
             </Text>
           )}
         </>
       ) : (
-        <ActivityIndicator color="blue" style={{marginTop: 50}} />
+        <ActivityIndicator color="blue" style={{ marginTop: 50 }} />
       )}
     </ScrollView>
   );

@@ -1,20 +1,20 @@
-import React, {useEffect, useMemo} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {Option, Select} from 'react-native-chooser';
+import React, { useEffect, useMemo } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Option, Select } from 'react-native-chooser';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useQuery} from 'react-query';
-import {useDispatch, useSelector} from 'react-redux';
+import { useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   VictoryAxis,
   VictoryBar,
   VictoryChart,
   VictoryLabel,
 } from 'victory-native';
-import {queryRequest} from '../../../dataManegment';
-import {RootState} from '../../../redux/slices';
-import {selectStructure} from '../../../redux/slices/structures-slice';
-import {formatDate} from '../../../utils/date';
-import {ErrorText, Loader} from '../../Feedbacks';
+import { makeGetRequest } from '../../../dataManegment';
+import { RootState } from '../../../redux/slices';
+import { selectStructure } from '../../../redux/slices/structures-slice';
+import { formatDate } from '../../../utils/date';
+import { ErrorText, Loader } from '../../Feedbacks';
 
 type statistcsType = {
   allYear: number;
@@ -29,24 +29,20 @@ type statistcsType = {
 
 export default function T1() {
   const dispatch = useDispatch();
-  const {selectedStructure, structures} = useSelector(
+  const { selectedStructure, structures } = useSelector(
     (state: RootState) => state.structuresState,
   );
-  const {selectedDate} = useSelector((state: RootState) => state.dateState);
-  const {isLoading, data, refetch, isError} = useQuery<statistcsType>(
-    'table-pizzayearstructure',
+  const { selectedDate } = useSelector((state: RootState) => state.dateState);
+  const { isLoading, data, isError } = useQuery<statistcsType>(
+    ['table-pizzayearstructure', selectedStructure, selectedDate],
     () =>
-      queryRequest(
+      makeGetRequest(
         `pizzayearstructure/${selectedStructure?.UIDStructure}/${formatDate(
           selectedDate,
         )}`,
       ),
-    {retry: false},
+    {},
   );
-
-  useEffect(() => {
-    refetch();
-  }, [selectedStructure, selectedDate, refetch]);
 
   const bars = useMemo(() => {
     return (
@@ -66,7 +62,7 @@ export default function T1() {
         transparent={true}
         indicatorIcon={<Icon name="angle-down" color="blue" size={25} />}
         onSelect={(value: string, label: string) => {
-          dispatch(selectStructure({Name: label, UIDStructure: value}));
+          dispatch(selectStructure({ Name: label, UIDStructure: value }));
         }}
         defaultText={selectedStructure ? selectedStructure.Name : null}
         style={styles.select}
@@ -77,7 +73,7 @@ export default function T1() {
         }}>
         {structures.map((el, i) => (
           <Option
-            style={{paddingVertical: 10, borderBottomWidth: 1}}
+            style={{ paddingVertical: 10, borderBottomWidth: 1 }}
             key={i}
             value={el.UIDStructure}>
             {el.Name}
@@ -89,13 +85,13 @@ export default function T1() {
 
       {!!bars.length && (
         <ScrollView horizontal>
-          <VictoryChart height={240} width={600} domainPadding={{x: 10}}>
+          <VictoryChart height={240} width={600} domainPadding={{ x: 10 }}>
             <VictoryAxis
-              domainPadding={{x: 10}}
+              domainPadding={{ x: 10 }}
               dependentAxis={true}
               style={{
-                axis: {stroke: 'transparent'},
-                grid: {stroke: '#CCCCCC', strokeDasharray: 0},
+                axis: { stroke: 'transparent' },
+                grid: { stroke: '#CCCCCC', strokeDasharray: 0 },
               }}
             />
             <VictoryAxis
@@ -103,16 +99,16 @@ export default function T1() {
                 tickLabels: {
                   angle: 45,
                 },
-                grid: {stroke: '#CCCCCC', strokeDasharray: 0},
+                grid: { stroke: '#CCCCCC', strokeDasharray: 0 },
               }}
             />
 
             <VictoryBar
               style={{
-                data: {fill: '#6666FF'},
+                data: { fill: '#6666FF' },
               }}
               labelComponent={<VictoryLabel textAnchor="middle" />}
-              labels={({datum}) => datum.y}
+              labels={({ datum }) => datum.y}
               data={bars}
             />
           </VictoryChart>

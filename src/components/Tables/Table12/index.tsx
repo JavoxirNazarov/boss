@@ -1,35 +1,31 @@
-import React, {useEffect, useMemo} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {useQuery} from 'react-query';
-import {useSelector} from 'react-redux';
+import React, { useEffect, useMemo } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 import {
   VictoryAxis,
   VictoryBar,
   VictoryChart,
   VictoryTheme,
 } from 'victory-native';
-import {queryRequest} from '../../../dataManegment';
-import {RootState} from '../../../redux/slices';
-import {formatDate} from '../../../utils/date';
-import {ErrorText, Loader} from '../../Feedbacks';
+import { makeGetRequest } from '../../../dataManegment';
+import { RootState } from '../../../redux/slices';
+import { formatDate } from '../../../utils/date';
+import { ErrorText, Loader } from '../../Feedbacks';
 
 type infoType = {
   allYear: number;
-  monthsArray: {date: string; amount: number; percent: number}[];
+  monthsArray: { date: string; amount: number; percent: number }[];
 };
 
 export default function T1() {
-  const {selectedDate} = useSelector((state: RootState) => state.dateState);
+  const { selectedDate } = useSelector((state: RootState) => state.dateState);
 
-  const {isLoading, data, isError, refetch} = useQuery<infoType>(
-    `table-pizzayear`,
-    () => queryRequest('pizzayear/' + formatDate(selectedDate)),
-    {retry: false},
+  const { isLoading, data, isError } = useQuery<infoType>(
+    ['table-pizzayear', selectedDate],
+    () => makeGetRequest('pizzayear/' + formatDate(selectedDate)),
+    {},
   );
-
-  useEffect(() => {
-    refetch();
-  }, [selectedDate, refetch]);
 
   const statistics = useMemo(() => {
     return data?.monthsArray?.map((el) => ({
@@ -48,14 +44,14 @@ export default function T1() {
       {isLoading && <Loader />}
 
       {data && (
-        <View style={{paddingLeft: 30}}>
+        <View style={{ paddingLeft: 30 }}>
           <VictoryChart height={270} theme={VictoryTheme.material}>
             <VictoryAxis
               dependentAxis={true}
               style={{
-                axis: {stroke: 'transparent'},
-                grid: {stroke: '#CCCCCC', strokeDasharray: 0},
-                axisLabel: {width: 5},
+                axis: { stroke: 'transparent' },
+                grid: { stroke: '#CCCCCC', strokeDasharray: 0 },
+                axisLabel: { width: 5 },
               }}
             />
             <VictoryAxis
@@ -63,18 +59,18 @@ export default function T1() {
                 tickLabels: {
                   angle: 45,
                 },
-                grid: {stroke: '#CCCCCC', strokeDasharray: 0},
+                grid: { stroke: '#CCCCCC', strokeDasharray: 0 },
               }}
             />
 
             <VictoryBar
               style={{
                 labels: {
-                  fill: ({datum}) => (datum.percent > 0 ? 'green' : 'red'),
+                  fill: ({ datum }) => (datum.percent > 0 ? 'green' : 'red'),
                 },
-                data: {fill: '#6666FF'},
+                data: { fill: '#6666FF' },
               }}
-              labels={({datum}) => (datum.percent ? datum.percent + '%' : '')}
+              labels={({ datum }) => (datum.percent ? datum.percent + '%' : '')}
               data={statistics}
             />
           </VictoryChart>

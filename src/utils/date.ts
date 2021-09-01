@@ -1,19 +1,7 @@
+import moment from 'moment';
+
 export function startDate(): string {
-  const dateObj = new Date();
-
-  let month = dateObj.getUTCMonth() + 1 < 10
-    ? '0' + (dateObj.getUTCMonth() + 1)
-    : dateObj.getUTCMonth() + 1;
-
-  let day =
-    dateObj.getUTCDate() < 10
-      ? '0' + dateObj.getUTCDate()
-      : dateObj.getUTCDate();
-  let year = dateObj.getUTCFullYear();
-
-
-  let newdate = year + '-' + month + '-' + day;
-  return newdate;
+  return moment().format('YYYY-MM-DD');
 }
 
 export function convertDate(date: string): string {
@@ -41,7 +29,6 @@ export function convertDate(date: string): string {
   return result;
 }
 
-
 export function formatDate(date: string) {
-  return date.split('-').join('')
+  return moment(date, 'YYYY-MM-DD').format('YYYYMMDD');
 }

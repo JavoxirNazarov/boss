@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   RefreshControl,
   ScrollView,
@@ -7,23 +7,23 @@ import {
   Text,
   View,
 } from 'react-native';
-import {useQueryClient, useMutation, useQuery} from 'react-query';
-import {ErrorText, Loader} from '../components/Feedbacks';
-import {allowedItem} from '../constants/types';
-import {queryPost, queryRequest} from '../dataManegment';
-import {wait} from '../utils';
+import { useQueryClient, useMutation, useQuery } from 'react-query';
+import { ErrorText, Loader } from '../components/Feedbacks';
+import { allowedItem } from '../constants/types';
+import { sendData, makeGetRequest } from '../dataManegment';
+import { wait } from '../utils';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function Settings() {
   const [refreshing, setRefreshing] = useState(false);
   const queryClient = useQueryClient();
-  const {isLoading, data, refetch, isError} = useQuery<allowedItem[]>(
+  const { isLoading, data, refetch, isError } = useQuery<allowedItem[]>(
     'mset',
-    () => queryRequest('mset'),
-    {retry: false},
+    () => makeGetRequest('mset'),
+    {},
   );
   const mutation = useMutation<any, unknown, allowedItem, unknown>(
-    (newSetting) => queryPost('mset', newSetting),
+    (newSetting) => sendData('mset', newSetting),
   );
 
   const onRefresh = useCallback(() => {
@@ -39,7 +39,7 @@ export default function Settings() {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
-      style={{width: '100%'}}
+      style={{ width: '100%' }}
       contentContainerStyle={{
         alignItems: 'center',
         paddingHorizontal: 10,
@@ -51,7 +51,7 @@ export default function Settings() {
         data.map((el, i) => (
           <TouchableOpacity
             onPress={() => {
-              const body = {...el, show: !el.show};
+              const body = { ...el, show: !el.show };
               queryClient.setQueryData<allowedItem[]>('mset', (prev) => {
                 return prev.map((item) =>
                   item.graph === el.graph ? body : item,

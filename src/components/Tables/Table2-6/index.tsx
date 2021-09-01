@@ -1,15 +1,16 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useQuery} from 'react-query';
-import {useSelector} from 'react-redux';
-import {queryRequest} from '../../../dataManegment';
-import {RootState} from '../../../redux/slices';
-import {formatDate} from '../../../utils/date';
-import {ErrorText, Loader} from '../../Feedbacks';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
+import { makeGetRequest } from '../../../dataManegment';
+import { RootState } from '../../../redux/slices';
+import { formatDate } from '../../../utils/date';
+import { ErrorText, Loader } from '../../Feedbacks';
 
 type infoType = {
   Name: string;
   AverageTime: number;
+  LatePercent: number;
   UIDStructure: string;
   IsGreen: boolean;
 };
@@ -20,21 +21,17 @@ export default function Table({
   children,
   nestedRoute,
 }: any) {
-  const {selectedDate, prevDate} = useSelector(
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
-  const {isLoading, data, refetch, isError} = useQuery<infoType[]>(
-    `table-${request}`,
+  const { isLoading, data, isError } = useQuery<infoType[]>(
+    [`table-${request}`, selectedDate, prevDate],
     () =>
-      queryRequest(
+      makeGetRequest(
         `${request}/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
       ),
-    {retry: false},
+    {},
   );
-
-  useEffect(() => {
-    refetch();
-  }, [selectedDate, prevDate, refetch]);
 
   function select(el: infoType) {
     navigation.navigate(nestedRoute, {
@@ -55,7 +52,7 @@ export default function Table({
             <TouchableOpacity
               onPress={() => select(el)}
               key={i}
-              style={{width: '50%', alignItems: 'center', marginBottom: 15}}>
+              style={{ width: '50%', alignItems: 'center', marginBottom: 15 }}>
               <Text style={styles.text}>{el.Name}</Text>
               <View
                 style={{
@@ -63,6 +60,8 @@ export default function Table({
                   borderColor: el.IsGreen ? '#00B686' : '#E80054',
                 }}>
                 <Text style={styles.text}>{el.AverageTime}</Text>
+                <View style={styles.divider} />
+                <Text style={styles.text}>{el.LatePercent}%</Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -116,5 +115,11 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  divider: {
+    width: '100%',
+    height: 1,
+    backgroundColor: '#ccc',
+    marginVertical: 2,
   },
 });

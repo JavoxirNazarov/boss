@@ -7,13 +7,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {DownloadDirectoryPath, writeFile} from 'react-native-fs';
+import { DownloadDirectoryPath, writeFile } from 'react-native-fs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import XLSX from 'xlsx';
-import {RootState} from '../redux/slices';
-import {setUser} from '../redux/slices/user-slice';
-import {formatDate} from '../utils/date';
+import { RootState } from '../redux/slices';
+import { setUser } from '../redux/slices/user-slice';
+import { formatDate } from '../utils/date';
 import useRole from '../utils/useRole';
 
 type chevronProps = {
@@ -32,12 +32,12 @@ const Chevrons: React.FC<chevronProps> = ({
   goBack,
 }) => {
   const dispatch = useDispatch();
-  const {isBoss} = useRole();
-  const {user} = useSelector((state: RootState) => state.userState);
-  const {selectedDate, prevDate} = useSelector(
+  const { isBoss } = useRole();
+  const { user } = useSelector((state: RootState) => state.userState);
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
-  const {selectedStructure} = useSelector(
+  const { selectedStructure } = useSelector(
     (state: RootState) => state.structuresState,
   );
 
@@ -83,7 +83,7 @@ const Chevrons: React.FC<chevronProps> = ({
       let wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Prova');
 
-      const wbout = XLSX.write(wb, {type: 'binary', bookType: 'xlsx'});
+      const wbout = XLSX.write(wb, { type: 'binary', bookType: 'xlsx' });
       let file =
         DownloadDirectoryPath +
         `/продажи${formatDate(prevDate)}-${formatDate(selectedDate)}.xlsx`;
@@ -103,12 +103,12 @@ const Chevrons: React.FC<chevronProps> = ({
         justifyContent: 'space-between',
         marginTop: 15,
       }}>
-      <Text style={{fontSize: 14, color: '#00B686'}} onPress={logOut}>
+      <Text style={{ fontSize: 14, color: '#00B686' }} onPress={logOut}>
         Выйти
       </Text>
 
       <TouchableOpacity onPress={download}>
-        <Text style={{color: '#00B686'}}>Скачать продажи</Text>
+        <Text style={{ color: '#00B686' }}>Скачать продажи</Text>
       </TouchableOpacity>
 
       {isBoss && (
@@ -134,7 +134,7 @@ const Chevrons: React.FC<chevronProps> = ({
           color={step === 0 ? '#ccc' : '#00B686'}
           onPress={goBack}
         />
-        <Text style={{fontSize: 14, color: '#333333'}}>
+        <Text style={{ fontSize: 14, color: '#333333' }}>
           {step + 1} / {length}
         </Text>
         <Icon

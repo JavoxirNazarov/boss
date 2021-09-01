@@ -1,17 +1,23 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {RefreshControl, ScrollView} from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { RefreshControl, ScrollView } from 'react-native';
 // import GestureRecognizer from 'react-native-swipe-gestures';
-import {useQueryClient} from 'react-query';
-import {useDispatch} from 'react-redux';
+import { useQueryClient } from 'react-query';
+import { useDispatch } from 'react-redux';
 import Chevrons from '../components/Chevrons';
-import DatePicker from '../components/DatePicker';
+import DatePickers from '../components/DatePickers';
 import MainBlock from '../components/MainBlock';
 import Tables from '../components/Tables';
-import {blockNames} from '../constants';
-import {allowedItem} from '../constants/types';
-import {makeGetRequest} from '../dataManegment';
-import {setStructuresThunk} from '../redux/thunks/structures-thunk';
-import {handleError, wait} from '../utils';
+import { blockNames } from '../constants';
+import { allowedItem } from '../constants/types';
+import { makeGetRequest } from '../dataManegment';
+import { setStructuresThunk } from '../redux/thunks/structures-thunk';
+import { handleError, wait } from '../utils';
 import useRole from '../utils/useRole';
 // const {width} = Dimensions.get('screen');
 
@@ -19,11 +25,11 @@ type propType = {
   navigation: any;
 };
 
-export default function Main({navigation}: propType) {
+export default function Main({ navigation }: propType) {
   const query = useQueryClient();
   const [step, setStep] = useState(0);
   const scroll = useRef<null | ScrollView>(null);
-  const {isManager} = useRole();
+  const { isManager } = useRole();
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
   const [listAllowed, setListAllowed] = useState<allowedItem[]>([]);
@@ -48,9 +54,10 @@ export default function Main({navigation}: propType) {
     setListAllowed(blockNames);
   }, [isManager]);
 
-  const filteredAllowed = useMemo(() => listAllowed.filter((el) => el.show), [
-    listAllowed,
-  ]);
+  const filteredAllowed = useMemo(
+    () => listAllowed.filter((el) => el.show),
+    [listAllowed],
+  );
 
   const length = useMemo(() => filteredAllowed.length, [filteredAllowed]);
 
@@ -70,13 +77,13 @@ export default function Main({navigation}: propType) {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
       ref={(list) => (scroll.current = list)}
-      style={{width: '100%'}}
+      style={{ width: '100%' }}
       contentContainerStyle={{
         alignItems: 'center',
         paddingHorizontal: 20,
         paddingVertical: 10,
       }}>
-      <DatePicker />
+      <DatePickers />
 
       <Chevrons
         length={length}
@@ -94,7 +101,7 @@ export default function Main({navigation}: propType) {
       <Tables stepName={filteredAllowed[step]?.graph} navigation={navigation} />
       {/* </GestureRecognizer> */}
 
-      <MainBlock scroll={scroll} />
+      <MainBlock />
     </ScrollView>
   );
 }

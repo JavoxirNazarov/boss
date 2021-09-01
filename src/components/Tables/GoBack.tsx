@@ -1,11 +1,11 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useDispatch} from 'react-redux';
-import {clearPressed} from '../../redux/slices/pressed-slice';
+import { useDispatch } from 'react-redux';
+import { clearPressed } from '../../redux/slices/pressed-slice';
 
-export default function GoBack({clear = true}) {
+export default function GoBack({ clear = true }) {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   return (
