@@ -71,7 +71,7 @@ export default function CollectionAndPrize({ route, navigation }: any) {
 
     makeGetRequest(params)
       .then((res) => setList(res))
-      .catch(handleError)
+      .catch(() => {})
       .finally(() => setFetching(false));
   }
 

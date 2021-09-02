@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -7,15 +7,15 @@ import {
   Text,
   View,
 } from 'react-native';
-import {Option, Select} from 'react-native-chooser';
+import { Option, Select } from 'react-native-chooser';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import Humans from '../../assets/Humans';
 import GoBack from '../../components/Tables/GoBack';
-import {makeGetRequest} from '../../dataManegment';
-import {RootState} from '../../redux/slices';
-import {handleError, wait} from '../../utils';
-import {formatDate} from '../../utils/date';
+import { makeGetRequest } from '../../dataManegment';
+import { RootState } from '../../redux/slices';
+import { handleError, wait } from '../../utils';
+import { formatDate } from '../../utils/date';
 
 type positionType = {
   Name: string;
@@ -29,10 +29,10 @@ type infoType = {
   lateDay: number;
 };
 
-export default function Table19({route}: any) {
-  const {structure} = route.params;
+export default function Table19({ route }: any) {
+  const { structure } = route.params;
 
-  const {selectedDate, prevDate} = useSelector(
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [info, setInfo] = useState<infoType[]>([]);
@@ -47,7 +47,7 @@ export default function Table19({route}: any) {
   useEffect(() => {
     makeGetRequest(`listposition/${structure}`)
       .then((res) => setPositions(res))
-      .catch(handleError);
+      .catch(() => {});
   }, []);
 
   const onRefresh = useCallback(() => {
@@ -64,7 +64,7 @@ export default function Table19({route}: any) {
       }/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
     )
       .then((res) => setInfo((prev) => res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, [selectedPosition]);
@@ -78,12 +78,12 @@ export default function Table19({route}: any) {
       <GoBack />
       <View style={styles.container}>
         <Text style={styles.title}>Опоздания сотрудников на работу</Text>
-        <Humans style={{marginTop: 20}} />
+        <Humans style={{ marginTop: 20 }} />
         <Select
           transparent={true}
           indicatorIcon={<Icon name="angle-down" color="blue" size={25} />}
           onSelect={(value: any, label: any) => {
-            setSelectedPosition({Name: label, UIDPosition: value});
+            setSelectedPosition({ Name: label, UIDPosition: value });
           }}
           defaultText={selectedPosition.Name ? selectedPosition.Name : null}
           style={styles.select}
@@ -94,7 +94,7 @@ export default function Table19({route}: any) {
           }}>
           {positions.map((el, i) => (
             <Option
-              style={{paddingVertical: 10, borderBottomWidth: 1}}
+              style={{ paddingVertical: 10, borderBottomWidth: 1 }}
               key={i}
               value={el.UIDPosition}>
               {el.Name}
@@ -133,8 +133,10 @@ export default function Table19({route}: any) {
 
             {info.map((el, i) => (
               <View key={i} style={styles.item}>
-                <Text style={{color: '#506883', fontSize: 14}}>{el.Name}</Text>
-                <View style={{flexDirection: 'row'}}>
+                <Text style={{ color: '#506883', fontSize: 14 }}>
+                  {el.Name}
+                </Text>
+                <View style={{ flexDirection: 'row' }}>
                   <View style={styles.block_circle}>
                     <Text
                       style={{

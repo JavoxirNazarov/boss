@@ -1,24 +1,30 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {RefreshControl, ScrollView, StyleSheet, View, Text} from 'react-native';
-import {Option, Select} from 'react-native-chooser';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+} from 'react-native';
+import { Option, Select } from 'react-native-chooser';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import GoBack from '../../components/Tables/GoBack';
 import Statistics from '../../components/Tables/Table2-6/Statistics';
-import {StatisticsType} from '../../constants/types';
-import {makeGetRequest} from '../../dataManegment';
-import {RootState} from '../../redux/slices';
-import {handleError, wait} from '../../utils';
-import {formatDate} from '../../utils/date';
+import { StatisticsType } from '../../constants/types';
+import { makeGetRequest } from '../../dataManegment';
+import { RootState } from '../../redux/slices';
+import { handleError, wait } from '../../utils';
+import { formatDate } from '../../utils/date';
 
 type courierType = {
   Name: string;
   UIDCourier: string;
 };
 
-export default function Table9({route, navigation}: any) {
-  const {structure} = route.params;
-  const {selectedDate, prevDate} = useSelector(
+export default function Table9({ route, navigation }: any) {
+  const { structure } = route.params;
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [couriers, setCouriers] = useState<courierType[]>([]);
@@ -30,7 +36,7 @@ export default function Table9({route, navigation}: any) {
   useEffect(() => {
     makeGetRequest(`listcouriers/${structure}`)
       .then((res) => setCouriers(res))
-      .catch(handleError);
+      .catch(() => {});
   }, []);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -49,7 +55,7 @@ export default function Table9({route, navigation}: any) {
       }/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
     )
       .then((res) => setStatistics((prev) => res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, [selectedCourier]);
@@ -73,7 +79,7 @@ export default function Table9({route, navigation}: any) {
           transparent={true}
           indicatorIcon={<Icon name="angle-down" color="blue" size={25} />}
           onSelect={(value, label) => {
-            setSelectedCourier({UIDCourier: value, Name: label});
+            setSelectedCourier({ UIDCourier: value, Name: label });
           }}
           defaultText={selectedCourier.Name ? selectedCourier.Name : null}
           style={styles.select}
@@ -84,7 +90,7 @@ export default function Table9({route, navigation}: any) {
           }}>
           {couriers.map((el, i) => (
             <Option
-              style={{paddingVertical: 10, borderBottomWidth: 1}}
+              style={{ paddingVertical: 10, borderBottomWidth: 1 }}
               key={i}
               value={el.UIDCourier}>
               {el.Name}

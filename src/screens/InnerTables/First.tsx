@@ -55,7 +55,7 @@ export default function First({ route }: any) {
       )}/${formatDate(selectedDate)}`,
     )
       .then((res) => setStatistics(res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, [structure]);

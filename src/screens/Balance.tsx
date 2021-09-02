@@ -92,7 +92,7 @@ export default function Balance({ navigation }: any) {
 
           <Select
             transparent={true}
-            indicatorIcon={<Icon name="angle-down" color="blue" size={25} />}
+            indicatorIcon={<Icon name="chevron-down" color="blue" size={25} />}
             onSelect={(value: string) => setStructure(value)}
             defaultText={
               structures?.find((el) => el.UIDStructure === structure)?.Name

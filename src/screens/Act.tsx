@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,13 +9,13 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
-import {useSelector} from 'react-redux';
-import {makeGetRequest} from '../dataManegment';
-import {RootState} from '../redux/slices';
-import {formatDate} from '../utils/date';
+import { useSelector } from 'react-redux';
+import { makeGetRequest } from '../dataManegment';
+import { RootState } from '../redux/slices';
+import { formatDate } from '../utils/date';
 import XLSX from 'xlsx';
-import {DownloadDirectoryPath, writeFile} from 'react-native-fs';
-import {handleError} from '../utils';
+import { DownloadDirectoryPath, writeFile } from 'react-native-fs';
+import { handleError } from '../utils';
 import GoBack from '../components/Tables/GoBack';
 
 type ActType = {
@@ -33,7 +33,7 @@ type ActType = {
 };
 
 export default function Act() {
-  const {selectedDate, prevDate} = useSelector(
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [act, setAct] = useState<ActType[]>([]);
@@ -43,7 +43,7 @@ export default function Act() {
       `reconciliation/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
     )
       .then((data) => setAct(data))
-      .catch(handleError);
+      .catch(() => {});
   }, []);
 
   const download = async () => {
@@ -68,17 +68,17 @@ export default function Act() {
         var ws = XLSX.utils.json_to_sheet(el.StringArray);
         ws.G2.s = {
           fill: {
-            bgColor: {rgb: ws.G2.v > 0 ? '#16F75A' : '#F71616'}, // Add background color
+            bgColor: { rgb: ws.G2.v > 0 ? '#16F75A' : '#F71616' }, // Add background color
           },
         };
         wb.Sheets[el.Partner] = ws;
       });
 
-      const wbout = XLSX.write(wb, {type: 'binary', bookType: 'xlsx'});
+      const wbout = XLSX.write(wb, { type: 'binary', bookType: 'xlsx' });
 
       writeFile(filePath, wbout, 'ascii')
         .then(() => Alert.alert('', 'Сохранено'))
-        .catch(handleError);
+        .catch(() => {});
     }
   };
 
@@ -87,13 +87,15 @@ export default function Act() {
       <GoBack />
 
       <TouchableOpacity onPress={download} style={styles.downloadBtn}>
-        <Text style={{color: '#fff', fontSize: 16}}>Скачать</Text>
+        <Text style={{ color: '#fff', fontSize: 16 }}>Скачать</Text>
       </TouchableOpacity>
 
       {act.length ? (
         act.map((el, i) => (
-          <View key={i} style={{alignItems: 'center', marginVertical: 15}}>
-            <Text style={{marginVertical: 5, fontSize: 16}}>{el.Partner}</Text>
+          <View key={i} style={{ alignItems: 'center', marginVertical: 15 }}>
+            <Text style={{ marginVertical: 5, fontSize: 16 }}>
+              {el.Partner}
+            </Text>
 
             <View style={styles.block}>
               <View
@@ -140,7 +142,7 @@ export default function Act() {
           </View>
         ))
       ) : (
-        <ActivityIndicator color="blue" style={{marginTop: 50}} />
+        <ActivityIndicator color="blue" style={{ marginTop: 50 }} />
       )}
     </ScrollView>
   );

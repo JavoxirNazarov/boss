@@ -43,7 +43,7 @@ export default function Deliveries({ navigation }: any) {
       `getdeliveries/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
     )
       .then((res) => setDeliveries(res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, []);

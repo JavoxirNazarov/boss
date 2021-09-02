@@ -1,5 +1,4 @@
 import { makeGetRequest } from '../../dataManegment';
-import { handleError } from '../../utils';
 import { AppThunk } from '../slices';
 import { selectStructure, setStructures } from '../slices/structures-slice';
 
@@ -10,6 +9,6 @@ export function setStructuresThunk(): AppThunk {
         dispatch(setStructures(res));
         dispatch(selectStructure(res[0]));
       })
-      .catch(handleError);
+      .catch(() => { });
   };
 }

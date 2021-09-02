@@ -7,19 +7,19 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {StatisticsType, timeArray} from '../../../constants/types';
-import {setPressed} from '../../../redux/slices/pressed-slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { StatisticsType, timeArray } from '../../../constants/types';
+import { setPressed } from '../../../redux/slices/pressed-slice';
 import * as Progress from 'react-native-progress';
-import {RootState} from '../../../redux/slices';
+import { RootState } from '../../../redux/slices';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 type propsType = {
-  statistics: StatisticsType | {};
+  statistics: Partial<StatisticsType>;
   navigation: any;
 };
 
-export default function Statistics({statistics, navigation}: propsType) {
+export default function Statistics({ statistics, navigation }: propsType) {
   function percent(type: string) {
     const summ =
       statistics?.lateArray?.length + statistics?.inTimeArray?.length;
@@ -37,11 +37,11 @@ export default function Statistics({statistics, navigation}: propsType) {
       {statistics?.average ? (
         <>
           <View style={styles.count}>
-            <Text style={{color: '#00B686'}}>
+            <Text style={{ color: '#00B686' }}>
               {statistics.average || 0} Мин
             </Text>
           </View>
-          <View style={{...styles.row, marginVertical: 13}}>
+          <View style={{ ...styles.row, marginVertical: 13 }}>
             <View
               style={{
                 width: '50%',
@@ -50,7 +50,7 @@ export default function Statistics({statistics, navigation}: propsType) {
               <Text>{percent('inTimeArray')}</Text>
 
               <View style={styles.count}>
-                <Text style={{color: '#00B686'}}>
+                <Text style={{ color: '#00B686' }}>
                   {statistics?.inTimeArray?.length || 0}
                 </Text>
               </View>
@@ -74,7 +74,7 @@ export default function Statistics({statistics, navigation}: propsType) {
               <Text>{percent('lateArray')}</Text>
 
               <View style={styles.count}>
-                <Text style={{color: '#E80054'}}>
+                <Text style={{ color: '#E80054' }}>
                   {statistics?.lateArray?.length || 0}
                 </Text>
               </View>
@@ -93,7 +93,7 @@ export default function Statistics({statistics, navigation}: propsType) {
           </View>
         </>
       ) : (
-        <ActivityIndicator color="blue" style={{marginTop: 25}} />
+        <ActivityIndicator color="blue" style={{ marginTop: 25 }} />
       )}
     </>
   );
@@ -109,15 +109,15 @@ const PressBar = ({
   el: timeArray;
 }) => {
   const dispatch = useDispatch();
-  const {pressed} = useSelector((state: RootState) => state.pressedState);
+  const { pressed } = useSelector((state: RootState) => state.pressedState);
 
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('Order', {id: el.order});
+        navigation.navigate('Order', { id: el.order });
         dispatch(setPressed(el.order));
       }}
-      style={{width: 150, marginTop: 10}}>
+      style={{ width: 150, marginTop: 10 }}>
       <View style={styles.row}>
         <Text style={styles.placeNumbers}>{el.time} минут</Text>
         <Text style={styles.placeNumbers}>
@@ -158,7 +158,7 @@ const PressBar = ({
         ) : null}
       </View>
       <Progress.Bar
-        style={{marginTop: 10}}
+        style={{ marginTop: 10 }}
         unfilledColor="#D8D8D8"
         borderColor="transparent"
         progress={el.scale}

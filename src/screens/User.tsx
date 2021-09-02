@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { BackHandler, ScrollView, StyleSheet, Text, View } from 'react-native';
 import GoBack from '../components/Tables/GoBack';
 import { makeGetRequest, sendData } from '../dataManegment';
 import ModalSelector from 'react-native-modal-selector-searchable';
@@ -26,40 +26,50 @@ export default function User({ route }: any) {
         .catch(() => {});
     }
 
-    return () => {
-      saveChanges();
-    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        saveChanges();
+        return true;
+      },
+    );
+
+    return () => backHandler.remove();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addToProducts = (item: IUserProduct) => {
-    setProductList((prev) => [item, ...prev]);
+    setProductList([item, ...productList]);
   };
 
   const deleteFromProducts = (UID: string) => {
     setProductList((prev) => prev.filter((el) => el.uidProduct !== UID));
   };
 
-  const saveChanges = () => {
+  const saveChanges = async () => {
     const body = {
       uidUser: UIDUser,
       goods: productList,
     };
-    sendData('users', body)
-      .then(() => {})
-      .catch(() => {});
+
+    try {
+      await sendData('users', body);
+    } catch (e) {}
   };
 
   return (
     <ScrollView style={styles.wraper}>
-      <GoBack />
+      <GoBack onPress={saveChanges} />
 
       <ModalSelector
+        style={{ marginTop: 20 }}
         keyExtractor={(data) => data.uidProduct}
         labelExtractor={(data) => data.product}
         data={products}
         initValue="Добавить продукт"
-        onChange={addToProducts}
+        onModalClose={(option: IUserProduct) => {
+          if (option) addToProducts(option);
+        }}
         fullHeight
       />
 

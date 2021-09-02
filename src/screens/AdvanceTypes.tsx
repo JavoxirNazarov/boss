@@ -47,7 +47,7 @@ export default function AdvanceTypes({ route, navigation }: any) {
       )}`,
     )
       .then((res) => setInfo(res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, []);

@@ -10,12 +10,12 @@ import {
   RefreshControl,
 } from 'react-native';
 import { useSelector } from 'react-redux';
-import { makeGetRequest, sendData } from '../dataManegment';
+import { makeGetRequest } from '../dataManegment';
 import { RootState } from '../redux/slices';
 import { formatDate } from '../utils/date';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
-import { handleError, wait } from '../utils';
+import { wait } from '../utils';
 
 type listType = {
   UIDWriteOff: string;
@@ -48,28 +48,11 @@ export default function WriteOffs({ route, navigation }: any) {
       )}?UIDStructure=${structure}`,
     )
       .then((res) => setList(res))
-      .catch(handleError)
+      .catch(() => {})
       .finally(() => setFetching(false));
   }
 
   useEffect(refresh, []);
-
-  const accept = (el: listType) => {
-    sendData('writeoffs/1/1', {
-      UIDWriteOff: el.UIDWriteOff,
-      BossAccepted: !el.BossAccepted,
-    })
-      .then(() => {
-        setList((prev) =>
-          prev.map((item) => {
-            return item.UIDWriteOff === el.UIDWriteOff
-              ? { ...item, BossAccepted: !el.BossAccepted }
-              : item;
-          }),
-        );
-      })
-      .catch(handleError);
-  };
 
   return (
     <ScrollView
@@ -111,28 +94,6 @@ export default function WriteOffs({ route, navigation }: any) {
                 paddingVertical: 10,
                 backgroundColor: el.BossAccepted ? '#FFFFFF' : '#e31b3d',
               }}>
-              <View
-                style={{
-                  width: '15%',
-                  alignItems: 'center',
-                  justifyContent: 'space-around',
-                }}>
-                {el.BossAccepted ? (
-                  <Icon
-                    onPress={() => accept(el)}
-                    name="checkbox-marked"
-                    size={25}
-                    color="#00B686"
-                  />
-                ) : (
-                  <Icon
-                    onPress={() => accept(el)}
-                    name="checkbox-blank-outline"
-                    size={25}
-                    color="#00B686"
-                  />
-                )}
-              </View>
               <View style={{ flex: 1 }}>
                 <View style={styles.textRow}>
                   <Text>Номер</Text>

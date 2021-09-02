@@ -30,7 +30,7 @@ export default function WriteOff({ route, navigation }: any) {
   useEffect(() => {
     makeGetRequest('writeoffs/1/1?UIDWriteOff=' + id)
       .then((res) => setInfo(res))
-      .catch(handleError);
+      .catch(() => {});
   }, [id]);
 
   return (

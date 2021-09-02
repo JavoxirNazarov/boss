@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -8,16 +8,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Option, Select} from 'react-native-chooser';
+import { Option, Select } from 'react-native-chooser';
 import * as Progress from 'react-native-progress';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import GoBack from '../../components/Tables/GoBack';
-import {makeGetRequest} from '../../dataManegment';
-import {RootState} from '../../redux/slices';
-import {setPressed} from '../../redux/slices/pressed-slice';
-import {handleError, wait} from '../../utils';
-import {formatDate} from '../../utils/date';
+import { makeGetRequest } from '../../dataManegment';
+import { RootState } from '../../redux/slices';
+import { clearPressed, setPressed } from '../../redux/slices/pressed-slice';
+import { wait } from '../../utils';
+import { formatDate } from '../../utils/date';
 
 type timeArray = {
   cookCount: number;
@@ -34,9 +34,12 @@ type StatisticsType = {
   average: number;
 };
 
-export default function Table({navigation, route}: any) {
-  const {structures} = useSelector((state: RootState) => state.structuresState);
-  const {selectedDate, prevDate} = useSelector(
+export default function Table({ navigation, route }: any) {
+  const dispatch = useDispatch();
+  const { structures } = useSelector(
+    (state: RootState) => state.structuresState,
+  );
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
 
@@ -58,7 +61,7 @@ export default function Table({navigation, route}: any) {
       )}/${formatDate(selectedDate)}`,
     )
       .then((res) => setStatistics((prev) => res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, [structure]);
@@ -79,7 +82,7 @@ export default function Table({navigation, route}: any) {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
       style={styles.wraper}>
-      <GoBack />
+      <GoBack onPress={() => dispatch(clearPressed())} />
 
       <View style={styles.container}>
         <Text style={styles.title}>
@@ -90,7 +93,7 @@ export default function Table({navigation, route}: any) {
           transparent={true}
           indicatorIcon={<Icon name="angle-down" color="blue" size={25} />}
           onSelect={(value: string, label: string) => {
-            setStructure({Name: label, UIDStructure: value});
+            setStructure({ Name: label, UIDStructure: value });
           }}
           defaultText={structure.Name}
           style={styles.select}
@@ -101,7 +104,7 @@ export default function Table({navigation, route}: any) {
           }}>
           {structures.map((el, i) => (
             <Option
-              style={{paddingVertical: 10, borderBottomWidth: 1}}
+              style={{ paddingVertical: 10, borderBottomWidth: 1 }}
               key={i}
               value={el.UIDStructure}>
               {el.Name}
@@ -112,7 +115,7 @@ export default function Table({navigation, route}: any) {
         {statistcs?.average ? (
           <>
             <View style={styles.count}>
-              <Text style={{color: '#00B686'}}>{statistcs.average} Мин</Text>
+              <Text style={{ color: '#00B686' }}>{statistcs.average} Мин</Text>
             </View>
             <View
               style={{
@@ -126,7 +129,7 @@ export default function Table({navigation, route}: any) {
                 }}>
                 <Text>{percent('inTimeArray')}</Text>
                 <View style={styles.count}>
-                  <Text style={{color: '#00B686'}}>
+                  <Text style={{ color: '#00B686' }}>
                     {statistcs?.inTimeArray?.length || 0}
                   </Text>
                 </View>
@@ -144,7 +147,7 @@ export default function Table({navigation, route}: any) {
                 }}>
                 <Text>{percent('lateArray')}</Text>
                 <View style={styles.count}>
-                  <Text style={{color: '#E80054'}}>
+                  <Text style={{ color: '#E80054' }}>
                     {statistcs?.lateArray?.length || 0}
                   </Text>
                 </View>
@@ -158,7 +161,7 @@ export default function Table({navigation, route}: any) {
             </View>
           </>
         ) : (
-          <ActivityIndicator style={{marginTop: 20}} color="blue" />
+          <ActivityIndicator style={{ marginTop: 20 }} color="blue" />
         )}
       </View>
     </ScrollView>
@@ -175,15 +178,15 @@ const PressBar = ({
   el: timeArray;
 }) => {
   const dispatch = useDispatch();
-  const {pressed} = useSelector((state: RootState) => state.pressedState);
+  const { pressed } = useSelector((state: RootState) => state.pressedState);
 
   return (
     <TouchableOpacity
       onPress={() => {
         if (el.cookCount > 1) {
-          navigation.navigate('Second2', {id: el.order});
+          navigation.navigate('Second2', { id: el.order });
         } else {
-          navigation.navigate('Order', {id: el.order});
+          navigation.navigate('Order', { id: el.order });
         }
         dispatch(setPressed(el.order));
       }}
@@ -202,7 +205,7 @@ const PressBar = ({
         <Text style={styles.placeNumbers}>{el.count}</Text>
       </View>
       <Progress.Bar
-        style={{marginTop: 10}}
+        style={{ marginTop: 10 }}
         unfilledColor="#D8D8D8"
         borderColor="transparent"
         progress={el.scale}

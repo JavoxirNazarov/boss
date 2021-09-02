@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -8,15 +8,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Option, Select} from 'react-native-chooser';
+import { Option, Select } from 'react-native-chooser';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import Humans from '../../assets/Humans';
 import GoBack from '../../components/Tables/GoBack';
-import {makeGetRequest} from '../../dataManegment';
-import {RootState} from '../../redux/slices';
-import {handleError} from '../../utils';
-import {formatDate} from '../../utils/date';
+import { makeGetRequest } from '../../dataManegment';
+import { RootState } from '../../redux/slices';
+import { handleError } from '../../utils';
+import { formatDate } from '../../utils/date';
 
 type StatisticsType = {
   UIDPosition: string;
@@ -25,10 +25,12 @@ type StatisticsType = {
   lateMonth: number;
 };
 
-export default function Table19({navigation, route}: any) {
-  const {structures} = useSelector((state: RootState) => state.structuresState);
+export default function Table19({ navigation, route }: any) {
+  const { structures } = useSelector(
+    (state: RootState) => state.structuresState,
+  );
   const [structure, setStructure] = useState(route.params);
-  const {selectedDate, prevDate} = useSelector(
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [statistcs, setStatistics] = useState<StatisticsType[]>([]);
@@ -50,7 +52,7 @@ export default function Table19({navigation, route}: any) {
         )}/${formatDate(selectedDate)}`,
       )
         .then((res) => setStatistics((prev) => res))
-        .catch(handleError);
+        .catch(() => {});
     }
   }
 
@@ -65,12 +67,12 @@ export default function Table19({navigation, route}: any) {
       <GoBack />
       <View style={styles.container}>
         <Text style={styles.title}>Опоздания сотрудников на работу</Text>
-        <Humans style={{marginTop: 20}} />
+        <Humans style={{ marginTop: 20 }} />
         <Select
           transparent={true}
           indicatorIcon={<Icon name="angle-down" color="blue" size={25} />}
           onSelect={(value, label) => {
-            setStructure({Name: label, UIDStructure: value});
+            setStructure({ Name: label, UIDStructure: value });
           }}
           defaultText={structure.Name}
           style={styles.select}
@@ -81,7 +83,7 @@ export default function Table19({navigation, route}: any) {
           }}>
           {structures.map((el, i) => (
             <Option
-              style={{paddingVertical: 10, borderBottomWidth: 1}}
+              style={{ paddingVertical: 10, borderBottomWidth: 1 }}
               key={i}
               value={el.UIDStructure}>
               {el.Name}
@@ -129,8 +131,10 @@ export default function Table19({navigation, route}: any) {
                 }
                 key={i}
                 style={styles.block}>
-                <Text style={{color: '#506883', fontSize: 14}}>{el.Name}</Text>
-                <View style={{flexDirection: 'row'}}>
+                <Text style={{ color: '#506883', fontSize: 14 }}>
+                  {el.Name}
+                </Text>
+                <View style={{ flexDirection: 'row' }}>
                   <View style={styles.block_circle}>
                     <Text
                       style={{
@@ -156,7 +160,7 @@ export default function Table19({navigation, route}: any) {
             ))}
           </>
         ) : (
-          <ActivityIndicator color="blue" style={{marginTop: 40}} />
+          <ActivityIndicator color="blue" style={{ marginTop: 40 }} />
         )}
       </View>
     </ScrollView>

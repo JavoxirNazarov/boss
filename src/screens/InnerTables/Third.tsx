@@ -1,19 +1,27 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {Option, Select} from 'react-native-chooser';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { Option, Select } from 'react-native-chooser';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import GoBack from '../../components/Tables/GoBack';
 import Statistics from '../../components/Tables/Table2-6/Statistics';
-import {StatisticsType} from '../../constants/types';
-import {makeGetRequest} from '../../dataManegment';
-import {RootState} from '../../redux/slices';
-import {handleError, wait} from '../../utils';
-import {formatDate} from '../../utils/date';
+import { StatisticsType } from '../../constants/types';
+import { makeGetRequest } from '../../dataManegment';
+import { RootState } from '../../redux/slices';
+import { handleError, wait } from '../../utils';
+import { formatDate } from '../../utils/date';
 
-export default function Table4({navigation, route}: any) {
-  const {structures} = useSelector((state: RootState) => state.structuresState);
-  const {selectedDate, prevDate} = useSelector(
+export default function Table4({ navigation, route }: any) {
+  const { structures } = useSelector(
+    (state: RootState) => state.structuresState,
+  );
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [structure, setStructure] = useState(route.params);
@@ -28,7 +36,7 @@ export default function Table4({navigation, route}: any) {
       )}/${formatDate(selectedDate)}`,
     )
       .then((res) => setStatistics((prev) => res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   console.log(statistics);
@@ -56,7 +64,7 @@ export default function Table4({navigation, route}: any) {
           transparent={true}
           indicatorIcon={<Icon name="angle-down" color="blue" size={25} />}
           onSelect={(value: string, label: string) => {
-            setStructure({Name: label, UIDStructure: value});
+            setStructure({ Name: label, UIDStructure: value });
           }}
           defaultText={structure.Name}
           style={styles.select}
@@ -67,7 +75,7 @@ export default function Table4({navigation, route}: any) {
           }}>
           {structures.map((el, i) => (
             <Option
-              style={{paddingVertical: 10, borderBottomWidth: 1}}
+              style={{ paddingVertical: 10, borderBottomWidth: 1 }}
               key={i}
               value={el.UIDStructure}>
               {el.Name}

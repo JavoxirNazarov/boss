@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {Fragment, useEffect, useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,17 +7,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import DeliveryIcon from '../assets/Car1';
 import ClickIcon from '../assets/Click';
 import PaymeIcon from '../assets/Payme';
 import PaymentIcon from '../assets/Payment';
 import TerminalIcon from '../assets/Terminal';
-import {makeGetRequest} from '../dataManegment';
-import {RootState} from '../redux/slices';
-import {IStats} from '../types/fetch';
-import {addSpace, handleError} from '../utils';
-import {formatDate} from '../utils/date';
+import { makeGetRequest } from '../dataManegment';
+import { RootState } from '../redux/slices';
+import { IStats } from '../types/fetch';
+import { addSpace } from '../utils';
+import { formatDate } from '../utils/date';
 import useRole from '../utils/useRole';
 
 type paymentType = {
@@ -58,9 +58,9 @@ export default function DeliveryBlock({
   CashAmount,
 }: Partial<IStats>) {
   const navigation = useNavigation();
-  const {isManager} = useRole();
-  const {user} = useSelector((state: RootState) => state.userState);
-  const {selectedDate, prevDate} = useSelector(
+  const { isManager } = useRole();
+  const { user } = useSelector((state: RootState) => state.userState);
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [payments, setPayments] = useState<paymentType[]>([]);
@@ -70,7 +70,7 @@ export default function DeliveryBlock({
       `getpayments/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
     )
       .then((res) => setPayments(res))
-      .catch(handleError);
+      .catch(() => {});
   }, [selectedDate, prevDate]);
 
   return (
@@ -93,20 +93,25 @@ export default function DeliveryBlock({
             justifyContent: 'space-around',
             height: '100%',
           }}>
-          <Text style={{color: '#FFFFFF', fontWeight: 'bold', fontSize: 14}}>
+          <Text style={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: 14 }}>
             Количество доставок
           </Text>
-          <Text style={{color: '#FFFFFF', fontWeight: 'bold', fontSize: 24}}>
+          <Text style={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: 24 }}>
             {DeliverySum || 0} сум
           </Text>
         </View>
 
         <Text
-          style={{color: '#FFFFFF', fontWeight: 'bold', fontSize: 36, top: 5}}>
+          style={{
+            color: '#FFFFFF',
+            fontWeight: 'bold',
+            fontSize: 36,
+            top: 5,
+          }}>
           {DeliveryAmount || 0}
         </Text>
 
-        <DeliveryIcon style={{top: 5}} />
+        <DeliveryIcon style={{ top: 5 }} />
 
         <Text
           style={{

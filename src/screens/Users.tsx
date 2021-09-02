@@ -25,8 +25,6 @@ export default function Users({ navigation }: any) {
     wait(2000).then(() => setRefreshing(false));
   };
 
-  console.log(data);
-
   return (
     <ScrollView
       refreshControl={

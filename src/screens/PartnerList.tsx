@@ -57,7 +57,7 @@ export default function PartnerList({ navigation }: any) {
         setPartners(res);
         setSelected(res[0]);
       })
-      .catch(handleError);
+      .catch(() => {});
   };
 
   useEffect(getPartners, []);
@@ -69,7 +69,7 @@ export default function PartnerList({ navigation }: any) {
       )}?UIDPartner=${selected.UIDPartner}&Payment=yellow`,
     )
       .then((res) => setYellowList(res))
-      .catch(handleError);
+      .catch(() => {});
 
     makeGetRequest(
       `partners/${formatDate(prevDate)}/${formatDate(
@@ -77,7 +77,7 @@ export default function PartnerList({ navigation }: any) {
       )}?UIDPartner=${selected.UIDPartner}&Payment=green`,
     )
       .then((res) => setGreenList(res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(() => {

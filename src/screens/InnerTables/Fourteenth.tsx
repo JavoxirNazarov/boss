@@ -1,12 +1,18 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import * as Progress from 'react-native-progress';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import GoBack from '../../components/Tables/GoBack';
-import {makeGetRequest} from '../../dataManegment';
-import {RootState} from '../../redux/slices';
-import {handleError, wait} from '../../utils';
-import {formatDate} from '../../utils/date';
+import { makeGetRequest } from '../../dataManegment';
+import { RootState } from '../../redux/slices';
+import { handleError, wait } from '../../utils';
+import { formatDate } from '../../utils/date';
 
 type tableType = {
   Name: string;
@@ -14,10 +20,10 @@ type tableType = {
   Amount: number;
 };
 
-export default function Table142({route}: any) {
-  const {selectedDate} = useSelector((state: RootState) => state.dateState);
+export default function Table142({ route }: any) {
+  const { selectedDate } = useSelector((state: RootState) => state.dateState);
   const [table, setTable] = useState<tableType[]>([]);
-  const {date} = route.params;
+  const { date } = route.params;
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -31,12 +37,12 @@ export default function Table142({route}: any) {
     if (date) {
       makeGetRequest('pizzamountday/' + date)
         .then((res) => setTable(res))
-        .catch(handleError);
+        .catch(() => {});
       return;
     }
     makeGetRequest('pizzamountday/' + formatDate(selectedDate))
       .then((res) => setTable(res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, []);
@@ -68,13 +74,13 @@ export default function Table142({route}: any) {
         {table
           .sort((a, b) => b.Amount - a.Amount)
           .map((el, i) => (
-            <View key={i} style={{width: 300, marginVertical: 15}}>
+            <View key={i} style={{ width: 300, marginVertical: 15 }}>
               <View style={styles.row}>
                 <Text style={styles.placeNumbers}>{el.Name}</Text>
                 <Text style={styles.placeNumbers}>{el.Amount}</Text>
               </View>
               <Progress.Bar
-                style={{marginTop: 10}}
+                style={{ marginTop: 10 }}
                 unfilledColor="rgba(0, 182, 134, 0.1)"
                 borderColor="transparent"
                 progress={percent(el.Amount)}

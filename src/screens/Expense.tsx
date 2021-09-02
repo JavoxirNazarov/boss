@@ -50,7 +50,7 @@ export default function Orders({ route, navigation }: any) {
       )}/expenses?UIDStructure=${structure}`,
     )
       .then((res) => setList(res))
-      .catch(handleError)
+      .catch(() => {})
       .finally(() => setFetching(false));
   }
 
@@ -68,7 +68,7 @@ export default function Orders({ route, navigation }: any) {
           }),
         );
       })
-      .catch(handleError);
+      .catch(() => {});
   };
 
   return (

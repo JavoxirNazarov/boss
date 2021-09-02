@@ -55,7 +55,7 @@ export default function Table11({ navigation, route }: any) {
       )}/${formatDate(selectedDate)}`,
     )
       .then((res) => setStatistics(res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, [structure]);

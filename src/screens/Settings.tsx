@@ -58,9 +58,7 @@ export default function Settings() {
                 );
               });
               mutation.mutate(body, {
-                onError: () => {
-                  refetch();
-                },
+                onError: () => refetch(),
               });
             }}
             key={i}

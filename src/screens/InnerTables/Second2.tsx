@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -9,10 +9,10 @@ import {
 } from 'react-native';
 import * as Progress from 'react-native-progress';
 import GoBack from '../../components/Tables/GoBack';
-import {makeGetRequest} from '../../dataManegment';
-import {handleError} from '../../utils';
+import { makeGetRequest } from '../../dataManegment';
+import { handleError } from '../../utils';
 
-type timeArray = {goods: string[]; scale: number; time: number};
+type timeArray = { goods: string[]; scale: number; time: number };
 
 type StatisticsType = {
   inTimeArray: timeArray[];
@@ -21,14 +21,14 @@ type StatisticsType = {
   all: number;
 };
 
-export default function Table({navigation, route}: any) {
-  const {id} = route.params;
+export default function Table({ navigation, route }: any) {
+  const { id } = route.params;
   const [statistcs, setStatistics] = useState<Partial<StatisticsType>>({});
 
   useEffect(() => {
     makeGetRequest(`longorderdetail/${id}`)
       .then((res) => setStatistics(res))
-      .catch(handleError);
+      .catch(() => {});
   }, []);
 
   function percent(type: string) {
@@ -50,20 +50,20 @@ export default function Table({navigation, route}: any) {
           Среднее время приготовления пиццы на текущий день
         </Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Order', {id})}
+          onPress={() => navigation.navigate('Order', { id })}
           style={{
             padding: 7,
             backgroundColor: '#506883',
             borderRadius: 5,
             marginVertical: 8,
           }}>
-          <Text style={{fontSize: 15, color: '#fff'}}>Посмотреть чек</Text>
+          <Text style={{ fontSize: 15, color: '#fff' }}>Посмотреть чек</Text>
         </TouchableOpacity>
 
         {statistcs?.average ? (
           <>
             <View style={styles.count}>
-              <Text style={{color: '#00B686'}}>{statistcs.average} Мин</Text>
+              <Text style={{ color: '#00B686' }}>{statistcs.average} Мин</Text>
             </View>
             <View
               style={{
@@ -77,7 +77,7 @@ export default function Table({navigation, route}: any) {
                 }}>
                 <Text>{percent('inTimeArray')}</Text>
                 <View style={styles.count}>
-                  <Text style={{color: '#00B686'}}>
+                  <Text style={{ color: '#00B686' }}>
                     {statistcs?.inTimeArray?.length || 0}
                   </Text>
                 </View>
@@ -95,7 +95,7 @@ export default function Table({navigation, route}: any) {
                 }}>
                 <Text>{percent('lateArray')}</Text>
                 <View style={styles.count}>
-                  <Text style={{color: '#E80054'}}>
+                  <Text style={{ color: '#E80054' }}>
                     {statistcs?.lateArray?.length || 0}
                   </Text>
                 </View>
@@ -109,14 +109,14 @@ export default function Table({navigation, route}: any) {
             </View>
           </>
         ) : (
-          <ActivityIndicator style={{marginTop: 20}} color="blue" />
+          <ActivityIndicator style={{ marginTop: 20 }} color="blue" />
         )}
       </View>
     </ScrollView>
   );
 }
 
-const Bar = ({el, color}: {el: timeArray; color: string}) => {
+const Bar = ({ el, color }: { el: timeArray; color: string }) => {
   const [visible, setVisible] = useState(false);
   return (
     <>
@@ -130,7 +130,7 @@ const Bar = ({el, color}: {el: timeArray; color: string}) => {
           <Text style={styles.placeNumbers}>{el.time} минут</Text>
         </View>
         <Progress.Bar
-          style={{marginTop: 10}}
+          style={{ marginTop: 10 }}
           unfilledColor="#D8D8D8"
           borderColor="transparent"
           progress={el.scale}
@@ -141,7 +141,7 @@ const Bar = ({el, color}: {el: timeArray; color: string}) => {
       </TouchableOpacity>
       {visible &&
         el.goods.map((g, i) => (
-          <Text style={{marginVertical: 4}} key={i}>
+          <Text style={{ marginVertical: 4 }} key={i}>
             {g}
           </Text>
         ))}

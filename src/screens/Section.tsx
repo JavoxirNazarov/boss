@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -9,11 +9,11 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useSelector} from 'react-redux';
-import {makeGetRequest} from '../dataManegment';
-import {RootState} from '../redux/slices';
-import {addSpace, handleError, wait} from '../utils';
-import {formatDate} from '../utils/date';
+import { useSelector } from 'react-redux';
+import { makeGetRequest } from '../dataManegment';
+import { RootState } from '../redux/slices';
+import { addSpace, handleError, wait } from '../utils';
+import { formatDate } from '../utils/date';
 
 type listType = {
   itemName: string;
@@ -22,13 +22,13 @@ type listType = {
   quantity: number;
 };
 
-export default function Section({route, navigation}: any) {
-  const {selectedDate, prevDate} = useSelector(
+export default function Section({ route, navigation }: any) {
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [list, setList] = useState<listType[]>([]);
   const [loading, setLoading] = useState(true);
-  const {branchName, UIDBranch, structure} = route.params;
+  const { branchName, UIDBranch, structure } = route.params;
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -45,7 +45,7 @@ export default function Section({route, navigation}: any) {
       )}${structure ? '?UIDStructure=' + structure : ''}`,
     )
       .then((res) => setList(res))
-      .catch(handleError)
+      .catch(() => {})
       .finally(() => setLoading(false));
   }
   useEffect(refresh, []);
@@ -55,7 +55,7 @@ export default function Section({route, navigation}: any) {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
-      style={{width: '100%'}}>
+      style={{ width: '100%' }}>
       <LinearGradient
         colors={['#CD4629', '#FF5733']}
         style={{
@@ -72,7 +72,7 @@ export default function Section({route, navigation}: any) {
           size={30}
           color="#fff"
         />
-        <Text style={{color: '#fff', fontSize: 20}}>{branchName}</Text>
+        <Text style={{ color: '#fff', fontSize: 20 }}>{branchName}</Text>
         <View></View>
       </LinearGradient>
 
@@ -87,8 +87,8 @@ export default function Section({route, navigation}: any) {
                   borderBottomWidth: 1,
                   padding: 10,
                 }}>
-                <Text style={{width: '10%'}}>{i + 1}</Text>
-                <View style={{flex: 1}}>
+                <Text style={{ width: '10%' }}>{i + 1}</Text>
+                <View style={{ flex: 1 }}>
                   <View style={styles.textRow}>
                     <Text>{el.itemName}</Text>
                   </View>
@@ -108,13 +108,13 @@ export default function Section({route, navigation}: any) {
               </View>
             ))
           ) : (
-            <Text style={{alignSelf: 'center', marginTop: 50, fontSize: 18}}>
+            <Text style={{ alignSelf: 'center', marginTop: 50, fontSize: 18 }}>
               Список пустой
             </Text>
           )}
         </>
       ) : (
-        <ActivityIndicator color="blue" style={{marginTop: 50}} />
+        <ActivityIndicator color="blue" style={{ marginTop: 50 }} />
       )}
     </ScrollView>
   );

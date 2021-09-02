@@ -17,7 +17,7 @@ import { makeGetRequest } from '../dataManegment';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/slices';
 import { formatDate } from '../utils/date';
-import { addSpace, handleError, wait } from '../utils';
+import { addSpace, wait } from '../utils';
 
 type paymentType = {
   Name: string;
@@ -61,7 +61,7 @@ export default function Payments({ navigation }: any) {
       `getpayments/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
     )
       .then((res) => setPayments(res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, []);

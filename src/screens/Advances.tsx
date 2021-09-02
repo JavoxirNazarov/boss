@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -7,24 +7,24 @@ import {
   Text,
   View,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import GoBack from '../components/Tables/GoBack';
-import {makeGetRequest} from '../dataManegment';
-import {RootState} from '../redux/slices';
-import {addSpace, handleError, wait} from '../utils';
-import {formatDate} from '../utils/date';
+import { makeGetRequest } from '../dataManegment';
+import { RootState } from '../redux/slices';
+import { addSpace, handleError, wait } from '../utils';
+import { formatDate } from '../utils/date';
 
 type listType = {
   name: string;
   sum: number;
 };
 
-export default function Advances({route}: any) {
+export default function Advances({ route }: any) {
   const [list, setList] = useState<listType[]>([]);
-  const {selectedDate, prevDate} = useSelector(
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
-  const {structure, position} = route.params;
+  const { structure, position } = route.params;
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
@@ -40,7 +40,7 @@ export default function Advances({route}: any) {
       )}/${formatDate(selectedDate)}`,
     )
       .then((res) => setList(res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, []);
@@ -56,7 +56,7 @@ export default function Advances({route}: any) {
       {list.length ? (
         <>
           {list.map((el, i) => (
-            <View key={i} style={{alignItems: 'center', marginVertical: 15}}>
+            <View key={i} style={{ alignItems: 'center', marginVertical: 15 }}>
               <View style={styles.block}>
                 <Text style={styles.block_title}>{el.name}</Text>
                 <Text style={styles.block_sum}>{addSpace(el.sum)} сум</Text>
@@ -65,7 +65,7 @@ export default function Advances({route}: any) {
           ))}
         </>
       ) : (
-        <ActivityIndicator color="blue" style={{marginTop: 50}} />
+        <ActivityIndicator color="blue" style={{ marginTop: 50 }} />
       )}
     </ScrollView>
   );

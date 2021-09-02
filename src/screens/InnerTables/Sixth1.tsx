@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -8,15 +8,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Option, Select} from 'react-native-chooser';
+import { Option, Select } from 'react-native-chooser';
 import * as Progress from 'react-native-progress';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import GoBack from '../../components/Tables/GoBack';
-import {makeGetRequest} from '../../dataManegment';
-import {RootState} from '../../redux/slices';
-import {handleError, wait} from '../../utils';
-import {formatDate} from '../../utils/date';
+import { makeGetRequest } from '../../dataManegment';
+import { RootState } from '../../redux/slices';
+import { handleError, wait } from '../../utils';
+import { formatDate } from '../../utils/date';
 
 type StatisticsType = {
   all: number;
@@ -29,10 +29,12 @@ type StatisticsType = {
   }[];
 };
 
-export default function Table11({navigation, route}: any) {
-  const {structures} = useSelector((state: RootState) => state.structuresState);
+export default function Table11({ navigation, route }: any) {
+  const { structures } = useSelector(
+    (state: RootState) => state.structuresState,
+  );
   const [structure, setStructure] = useState(route.params);
-  const {selectedDate, prevDate} = useSelector(
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [statistcs, setStatistics] = useState<Partial<StatisticsType>>({});
@@ -53,7 +55,7 @@ export default function Table11({navigation, route}: any) {
       )}/${formatDate(selectedDate)}`,
     )
       .then((res) => setStatistics((prev) => res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, [structure]);
@@ -80,7 +82,7 @@ export default function Table11({navigation, route}: any) {
           transparent={true}
           indicatorIcon={<Icon name="angle-down" color="blue" size={25} />}
           onSelect={(value: string, label: string) => {
-            setStructure({Name: label, UIDStructure: value});
+            setStructure({ Name: label, UIDStructure: value });
           }}
           defaultText={structure.Name}
           style={styles.select}
@@ -91,7 +93,7 @@ export default function Table11({navigation, route}: any) {
           }}>
           {structures.map((el, i) => (
             <Option
-              style={{paddingVertical: 10, borderBottomWidth: 1}}
+              style={{ paddingVertical: 10, borderBottomWidth: 1 }}
               key={i}
               value={el.UIDStructure}>
               {el.Name}
@@ -108,7 +110,7 @@ export default function Table11({navigation, route}: any) {
             <ActivityIndicator color="blue" />
           ) : (
             <View style={styles.count}>
-              <Text style={{color: '#00B686'}}>{statistcs.all} Шт</Text>
+              <Text style={{ color: '#00B686' }}>{statistcs.all} Шт</Text>
             </View>
           )}
 
@@ -125,18 +127,20 @@ export default function Table11({navigation, route}: any) {
                     })
                   }
                   key={i}
-                  style={{width: 300, marginTop: 15}}>
+                  style={{ width: 300, marginTop: 15 }}>
                   <View style={styles.row}>
                     <Text style={styles.placeNumbers}>{el.name}</Text>
-                    <Text style={{...styles.placeNumbers, textAlign: 'center'}}>
+                    <Text
+                      style={{ ...styles.placeNumbers, textAlign: 'center' }}>
                       {el.average} Мин
                     </Text>
-                    <Text style={{...styles.placeNumbers, textAlign: 'right'}}>
+                    <Text
+                      style={{ ...styles.placeNumbers, textAlign: 'right' }}>
                       {el.deliveryCount} Шт
                     </Text>
                   </View>
                   <Progress.Bar
-                    style={{marginTop: 10}}
+                    style={{ marginTop: 10 }}
                     unfilledColor="#D8D8D8"
                     borderColor="transparent"
                     progress={separator(statistcs.all, el.deliveryCount)}

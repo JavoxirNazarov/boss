@@ -17,7 +17,7 @@ import { blockNames } from '../constants';
 import { allowedItem } from '../constants/types';
 import { makeGetRequest } from '../dataManegment';
 import { setStructuresThunk } from '../redux/thunks/structures-thunk';
-import { handleError, wait } from '../utils';
+import { wait } from '../utils';
 import useRole from '../utils/useRole';
 // const {width} = Dimensions.get('screen');
 
@@ -48,7 +48,7 @@ export default function Main({ navigation }: propType) {
     if (isManager) {
       makeGetRequest('mset')
         .then((res) => setListAllowed(res))
-        .catch(handleError);
+        .catch(() => {});
       return;
     }
     setListAllowed(blockNames);

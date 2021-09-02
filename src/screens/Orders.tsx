@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,13 +8,13 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import {useSelector} from 'react-redux';
-import {makeGetRequest, sendData} from '../dataManegment';
-import {RootState} from '../redux/slices';
-import {formatDate} from '../utils/date';
+import { useSelector } from 'react-redux';
+import { makeGetRequest, sendData } from '../dataManegment';
+import { RootState } from '../redux/slices';
+import { formatDate } from '../utils/date';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
-import {addSpace, handleError, wait} from '../utils';
+import { addSpace, handleError, wait } from '../utils';
 
 type ordersType = {
   Type: string;
@@ -29,20 +29,14 @@ type ordersType = {
   DeletionCause?: string;
 };
 
-export default function Orders({route, navigation}: any) {
-  const {selectedDate, prevDate} = useSelector(
+export default function Orders({ route, navigation }: any) {
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [orders, setOrders] = useState<ordersType[]>([]);
   const [loading, setLoading] = useState(true);
-  const {
-    uid,
-    type,
-    UIDPayment,
-    UIDPartner,
-    structureName,
-    color,
-  } = route.params;
+  const { uid, type, UIDPayment, UIDPartner, structureName, color } =
+    route.params;
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -60,7 +54,7 @@ export default function Orders({route, navigation}: any) {
         )}?UIDStructure=${uid}`,
       )
         .then((res) => setOrders(res))
-        .catch(handleError)
+        .catch(() => {})
         .finally(() => setLoading(false));
     } else if (type?.includes('Партнеры')) {
       makeGetRequest(
@@ -69,7 +63,7 @@ export default function Orders({route, navigation}: any) {
         )}?UIDStructure=${uid}&UIDPartner=${UIDPartner}&Payment=${color}`,
       )
         .then((res) => setOrders(res))
-        .catch(handleError)
+        .catch(() => {})
         .finally(() => setLoading(false));
     } else if (type === 'доставки') {
       makeGetRequest(
@@ -78,7 +72,7 @@ export default function Orders({route, navigation}: any) {
         )}`,
       )
         .then((res) => setOrders(res))
-        .catch(handleError)
+        .catch(() => {})
         .finally(() => setLoading(false));
     } else if (type) {
       makeGetRequest(
@@ -87,7 +81,7 @@ export default function Orders({route, navigation}: any) {
         )}/${UIDPayment}`,
       )
         .then((res) => setOrders(res))
-        .catch(handleError)
+        .catch(() => {})
         .finally(() => setLoading(false));
     } else {
       makeGetRequest(
@@ -96,7 +90,7 @@ export default function Orders({route, navigation}: any) {
         }`,
       )
         .then((res) => setOrders(res))
-        .catch(handleError)
+        .catch(() => {})
         .finally(() => setLoading(false));
     }
   }
@@ -110,11 +104,11 @@ export default function Orders({route, navigation}: any) {
       .then(() => {
         setOrders((prev) =>
           prev.map((item) => {
-            return item.UIDOrder == UID ? {...item, accepted: val} : item;
+            return item.UIDOrder == UID ? { ...item, accepted: val } : item;
           }),
         );
       })
-      .catch(handleError);
+      .catch(() => {});
   };
 
   const handleColor = (el: ordersType) => {
@@ -129,7 +123,7 @@ export default function Orders({route, navigation}: any) {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
-      style={{width: '100%'}}>
+      style={{ width: '100%' }}>
       <LinearGradient
         colors={['#CD4629', '#FF5733']}
         style={{
@@ -145,7 +139,7 @@ export default function Orders({route, navigation}: any) {
           size={30}
           color="#fff"
         />
-        <Text style={{color: '#fff', fontSize: 20}}>
+        <Text style={{ color: '#fff', fontSize: 20 }}>
           Все{' '}
           {type ? type : structureName ? 'счета: ' + structureName : 'счета'}
         </Text>
@@ -168,7 +162,7 @@ export default function Orders({route, navigation}: any) {
                 padding: 10,
                 backgroundColor: handleColor(el),
               }}>
-              <View style={{flex: 1}}>
+              <View style={{ flex: 1 }}>
                 <Text
                   style={{
                     textAlign: 'center',
@@ -201,13 +195,13 @@ export default function Orders({route, navigation}: any) {
                 {el.DeletionCause !== undefined && (
                   <View style={styles.textRow}>
                     <Text>Причина удаления</Text>
-                    <Text style={{width: '50%', textAlign: 'right'}}>
+                    <Text style={{ width: '50%', textAlign: 'right' }}>
                       {el.DeletionCause || 'Причина не указана'}
                     </Text>
                   </View>
                 )}
 
-                <View style={{alignItems: 'flex-end'}}>
+                <View style={{ alignItems: 'flex-end' }}>
                   {el.accepted !== undefined &&
                     (el?.accepted ? (
                       <Icon
@@ -229,12 +223,12 @@ export default function Orders({route, navigation}: any) {
             </TouchableOpacity>
           ))
         ) : (
-          <Text style={{alignSelf: 'center', marginTop: 50, fontSize: 18}}>
+          <Text style={{ alignSelf: 'center', marginTop: 50, fontSize: 18 }}>
             Чеков нет
           </Text>
         )
       ) : (
-        <ActivityIndicator color="blue" style={{marginTop: 50}} />
+        <ActivityIndicator color="blue" style={{ marginTop: 50 }} />
       )}
     </ScrollView>
   );

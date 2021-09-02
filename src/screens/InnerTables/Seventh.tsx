@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -8,16 +8,16 @@ import {
   Text,
   View,
 } from 'react-native';
-import {Option, Select} from 'react-native-chooser';
+import { Option, Select } from 'react-native-chooser';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useSelector} from 'react-redux';
-import {VictoryArea, VictoryAxis, VictoryChart} from 'victory-native';
+import { useSelector } from 'react-redux';
+import { VictoryArea, VictoryAxis, VictoryChart } from 'victory-native';
 import GoBack from '../../components/Tables/GoBack';
-import {makeGetRequest} from '../../dataManegment';
-import {RootState} from '../../redux/slices';
-import {handleError, wait} from '../../utils';
-import {formatDate} from '../../utils/date';
-const {width} = Dimensions.get('screen');
+import { makeGetRequest } from '../../dataManegment';
+import { RootState } from '../../redux/slices';
+import { handleError, wait } from '../../utils';
+import { formatDate } from '../../utils/date';
+const { width } = Dimensions.get('screen');
 
 type StatisticsType = {
   UIDCourier: string;
@@ -30,10 +30,12 @@ type graphType = {
   time: number;
 };
 
-export default function Table17({route}: any) {
-  const {structures} = useSelector((state: RootState) => state.structuresState);
+export default function Table17({ route }: any) {
+  const { structures } = useSelector(
+    (state: RootState) => state.structuresState,
+  );
   const [structure, setStructure] = useState(route.params);
-  const {selectedDate, prevDate} = useSelector(
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [statistcs, setStatistics] = useState<StatisticsType[]>([]);
@@ -53,13 +55,13 @@ export default function Table17({route}: any) {
       )}/${formatDate(selectedDate)}`,
     )
       .then((res) => setStatistics(res))
-      .catch(handleError);
+      .catch(() => {});
 
     makeGetRequest(
       `freetimegraph/${structure.UIDStructure}/${formatDate(selectedDate)}`,
     )
       .then((res) => setGraph(res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, [structure]);
@@ -87,7 +89,7 @@ export default function Table17({route}: any) {
           transparent={true}
           indicatorIcon={<Icon name="angle-down" color="blue" size={25} />}
           onSelect={(value: any, label: any) => {
-            setStructure({Name: label, UIDStructure: value});
+            setStructure({ Name: label, UIDStructure: value });
           }}
           defaultText={structure.Name}
           style={styles.select}
@@ -98,7 +100,7 @@ export default function Table17({route}: any) {
           }}>
           {structures.map((el, i) => (
             <Option
-              style={{paddingVertical: 10, borderBottomWidth: 1}}
+              style={{ paddingVertical: 10, borderBottomWidth: 1 }}
               key={i}
               value={el.UIDStructure}>
               {el.Name}
@@ -112,7 +114,7 @@ export default function Table17({route}: any) {
             style={{
               width: '100%',
             }}>
-            <View style={{marginLeft: 10}}>
+            <View style={{ marginLeft: 10 }}>
               <VictoryChart
                 width={graph.length > 20 ? graph.length * 22 : width + 50}>
                 <VictoryAxis
@@ -121,22 +123,22 @@ export default function Table17({route}: any) {
                   dependentAxis
                   fixLabelOverlap={true}
                   style={{
-                    grid: {stroke: '#CCCCCC', strokeDasharray: 0},
-                    ticks: {padding: -9},
-                    tickLabels: {fontSize: 11},
+                    grid: { stroke: '#CCCCCC', strokeDasharray: 0 },
+                    ticks: { padding: -9 },
+                    tickLabels: { fontSize: 11 },
                   }}
                 />
                 <VictoryAxis
                   crossAxis
                   tickFormat={(t) => `${t[3]}${t[4]}.\n${t[6]}${t[7]}`}
                   style={{
-                    grid: {stroke: '#CCCCCC', strokeDasharray: 0},
-                    ticks: {padding: 2},
+                    grid: { stroke: '#CCCCCC', strokeDasharray: 0 },
+                    ticks: { padding: 2 },
                   }}
                 />
                 <VictoryArea
                   style={{
-                    data: {fill: 'rgba(32, 0, 232, 0.19)'},
+                    data: { fill: 'rgba(32, 0, 232, 0.19)' },
                   }}
                   data={graph}
                   x="hour"
@@ -146,7 +148,7 @@ export default function Table17({route}: any) {
             </View>
           </ScrollView>
         ) : (
-          <ActivityIndicator color="blue" style={{marginTop: 40}} />
+          <ActivityIndicator color="blue" style={{ marginTop: 40 }} />
         )}
 
         {statistcs

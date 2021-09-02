@@ -47,7 +47,7 @@ export default function Order({ route, navigation }: any) {
   useEffect(() => {
     makeGetRequest('inforder/' + id)
       .then((res) => setInfo(res))
-      .catch(handleError);
+      .catch(() => {});
   }, [id]);
 
   return (

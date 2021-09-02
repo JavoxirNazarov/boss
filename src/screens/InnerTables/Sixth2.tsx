@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -8,16 +8,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Option, Select} from 'react-native-chooser';
+import { Option, Select } from 'react-native-chooser';
 import * as Progress from 'react-native-progress';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import GoBack from '../../components/Tables/GoBack';
-import {makeGetRequest} from '../../dataManegment';
-import {RootState} from '../../redux/slices';
-import {setPressed} from '../../redux/slices/pressed-slice';
-import {handleError, wait} from '../../utils';
-import {formatDate} from '../../utils/date';
+import { makeGetRequest } from '../../dataManegment';
+import { RootState } from '../../redux/slices';
+import { clearPressed, setPressed } from '../../redux/slices/pressed-slice';
+import { wait } from '../../utils';
+import { formatDate } from '../../utils/date';
 
 type courierType = {
   Name: string;
@@ -37,11 +37,11 @@ type StatisticsType = {
   lateArray: timeArray[];
 };
 
-export default function Table9({route, navigation}: any) {
+export default function Table9({ route, navigation }: any) {
   const dispatch = useDispatch();
-  const {pressed} = useSelector((state: RootState) => state.pressedState);
-  const {structure} = route.params;
-  const {selectedDate, prevDate} = useSelector(
+  const { pressed } = useSelector((state: RootState) => state.pressedState);
+  const { structure } = route.params;
+  const { selectedDate, prevDate } = useSelector(
     (state: RootState) => state.dateState,
   );
   const [couriers, setCouriers] = useState<courierType[]>([]);
@@ -56,7 +56,7 @@ export default function Table9({route, navigation}: any) {
   useEffect(() => {
     makeGetRequest(`listcouriers/${structure}`)
       .then((res) => setCouriers(res))
-      .catch(handleError);
+      .catch(() => {});
   }, []);
 
   const onRefresh = useCallback(() => {
@@ -73,7 +73,7 @@ export default function Table9({route, navigation}: any) {
       }/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
     )
       .then((res) => setStatistics((prev) => res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, [selectedCourier]);
@@ -94,14 +94,14 @@ export default function Table9({route, navigation}: any) {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
       style={styles.wraper}>
-      <GoBack />
+      <GoBack onPress={() => dispatch(clearPressed())} />
       <View style={styles.container}>
         <Text style={styles.title}>Среднее время возвращения курьера</Text>
         <Select
           transparent={true}
           indicatorIcon={<Icon name="angle-down" color="blue" size={25} />}
           onSelect={(value, label) => {
-            setSelectedCourier({Name: label, UIDCourier: value});
+            setSelectedCourier({ Name: label, UIDCourier: value });
           }}
           defaultText={selectedCourier.Name ? selectedCourier.Name : null}
           style={styles.select}
@@ -112,7 +112,7 @@ export default function Table9({route, navigation}: any) {
           }}>
           {couriers.map((el, i) => (
             <Option
-              style={{paddingVertical: 10, borderBottomWidth: 1}}
+              style={{ paddingVertical: 10, borderBottomWidth: 1 }}
               key={i}
               value={el.UIDCourier}>
               {el.Name}
@@ -122,11 +122,11 @@ export default function Table9({route, navigation}: any) {
         {statistcs?.average ? (
           <>
             <View style={styles.count}>
-              <Text style={{color: '#00B686'}}>
+              <Text style={{ color: '#00B686' }}>
                 {statistcs.average || 0} Мин
               </Text>
             </View>
-            <View style={{...styles.row, marginVertical: 13}}>
+            <View style={{ ...styles.row, marginVertical: 13 }}>
               <View
                 style={{
                   width: '50%',
@@ -135,7 +135,7 @@ export default function Table9({route, navigation}: any) {
                 <Text>{percent('inTimeArray')}</Text>
 
                 <View style={styles.count}>
-                  <Text style={{color: '#00B686'}}>
+                  <Text style={{ color: '#00B686' }}>
                     {statistcs?.inTimeArray?.length || 0}
                   </Text>
                 </View>
@@ -145,11 +145,11 @@ export default function Table9({route, navigation}: any) {
                   .map((el, i) => (
                     <TouchableOpacity
                       onPress={() => {
-                        navigation.navigate('Order', {id: el.order});
+                        navigation.navigate('Order', { id: el.order });
                         dispatch(setPressed(el.order));
                       }}
                       key={i}
-                      style={{width: 145, marginTop: 10}}>
+                      style={{ width: 145, marginTop: 10 }}>
                       <View style={styles.row}>
                         <Text style={styles.placeNumbers}>{el.time} минут</Text>
                         {el.longRange ? (
@@ -165,7 +165,7 @@ export default function Table9({route, navigation}: any) {
                         ) : null}
                       </View>
                       <Progress.Bar
-                        style={{marginTop: 10}}
+                        style={{ marginTop: 10 }}
                         unfilledColor="#D8D8D8"
                         borderColor="transparent"
                         progress={el.scale}
@@ -184,7 +184,7 @@ export default function Table9({route, navigation}: any) {
                 <Text>{percent('lateArray')}</Text>
 
                 <View style={styles.count}>
-                  <Text style={{color: '#E80054'}}>
+                  <Text style={{ color: '#E80054' }}>
                     {statistcs?.lateArray?.length || 0}
                   </Text>
                 </View>
@@ -195,11 +195,11 @@ export default function Table9({route, navigation}: any) {
                     .map((el, i) => (
                       <TouchableOpacity
                         onPress={() => {
-                          navigation.navigate('Order', {id: el.order});
+                          navigation.navigate('Order', { id: el.order });
                           dispatch(setPressed(el.order));
                         }}
                         key={i}
-                        style={{width: 145, marginTop: 10}}>
+                        style={{ width: 145, marginTop: 10 }}>
                         <View style={styles.row}>
                           <Text style={styles.placeNumbers}>
                             {el.time} минут
@@ -217,7 +217,7 @@ export default function Table9({route, navigation}: any) {
                           ) : null}
                         </View>
                         <Progress.Bar
-                          style={{marginTop: 10}}
+                          style={{ marginTop: 10 }}
                           unfilledColor="#D8D8D8"
                           borderColor="transparent"
                           progress={el.scale}
@@ -231,7 +231,7 @@ export default function Table9({route, navigation}: any) {
             </View>
           </>
         ) : (
-          <ActivityIndicator color="blue" style={{marginTop: 25}} />
+          <ActivityIndicator color="blue" style={{ marginTop: 25 }} />
         )}
       </View>
     </ScrollView>

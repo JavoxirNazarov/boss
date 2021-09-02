@@ -42,7 +42,7 @@ export default function Sales({ navigation }: any) {
       `getsales/${formatDate(prevDate)}/${formatDate(selectedDate)}`,
     )
       .then((res) => setSales(res))
-      .catch(handleError);
+      .catch(() => {});
   }
 
   useEffect(refresh, []);
