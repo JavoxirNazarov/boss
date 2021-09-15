@@ -7,9 +7,13 @@ interface IProps {
   children?: any;
 }
 
-export default function QueryWrapper({ isLoading, isError, children }: IProps) {
+export default function QueryWrapper({
+  isLoading,
+  isError,
+  children = null,
+}: IProps) {
   if (isLoading) return <Loader />;
   if (isError) return <ErrorText />;
 
-  if (children) return children;
+  return children;
 }
